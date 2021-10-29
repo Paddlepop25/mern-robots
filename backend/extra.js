@@ -40,6 +40,21 @@ const myFavouritesInfo = [
   },
 ];
 
+// mock req.body
+const entry = {
+  nickname: ' ALAdDIn   ',
+  email: '       iloveprincessjasmine@gmail.com',
+  'favourite-color': '     PurPLE',
+  'favourite-series1': '    x ',
+  'favourite-series2': 'Y',
+  'favourite-series3': 'z     ',
+  coke: '0.5',
+  joke: '       xyz     ',
+  countries: 3.0,
+  durians: true,
+  likes: '7',
+};
+
 // local test GET
 app.get('/', (req, res) => {
   res.status(200);

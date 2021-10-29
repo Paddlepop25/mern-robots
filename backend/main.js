@@ -2,6 +2,7 @@ require('dotenv').config();
 const morgan = require('morgan');
 const express = require('express');
 const MongoClient = require('mongodb').MongoClient;
+const { parse } = require('dotenv');
 
 const app = express();
 
@@ -14,12 +15,26 @@ const mongoClient = new MongoClient(MONGO_URL, {
   useUnifiedTopology: true,
 });
 
-// make utility function
+// connect to MongoDBß
+const connectToMongoDB = async (operations, res) => {
+  try {
+    const client = await MongoClient.connect(MONGO_URL);
+    const db = client.db(MONGO_DB);
+    await operations(db);
+    client.close();
+    res.status(200).type('application/json');
+  } catch (error) {
+    res.status(500).type('application/json');
+    res.json({ message: 'Error connecting to MongoDB', 'ERROR >>>>> ': error });
+  }
+};
+
+// trim inputs and convert to lowercase
 const trimAndLowerCaseFn = (input) => {
   return input.trim().toLowerCase();
 };
 
-// make body object
+// create body object
 const mkMyFavourites = (params) => {
   const favSeries = [
     trimAndLowerCaseFn(params['favourite-series1']),
@@ -45,171 +60,138 @@ app.use(morgan('combined'));
 
 // local MongoDB - get all documents
 app.get('/my-favourites', async (req, res) => {
-  try {
-    const client = await MongoClient.connect(MONGO_URL);
-    const db = client.db(MONGO_DB);
+  connectToMongoDB(async (db) => {
     const entries = await db
       .collection('entries')
       .find()
       .sort({ _id: -1 })
       .toArray();
-    res.status(200).type('application/json');
     res.send(entries);
-    console.log('ENTRIES >>>> ', entries);
-    client.close();
-  } catch (error) {
-    res.status(500).type('application/json');
-    res.json({ message: 'Error connecting to MongoDB >>>>>', error });
-  }
+  }, res);
 });
 
 // local MongoDB - GET
 app.get('/my-favourites/:nickname', async (req, res) => {
-  const nickname = trimAndLowerCaseFn(req.params.nickname);
-  try {
-    const client = await MongoClient.connect(MONGO_URL);
-    const db = client.db(MONGO_DB);
-    const entries = await db.collection('entries').findOne({ nickname });
-    res.status(200).type('application/json');
-    res.send(entries);
-    console.log('ENTRIES >>>> ', entries);
-    client.close();
-  } catch (error) {
-    res.status(500).type('application/json');
-    res.json({ message: 'Error connecting to MongoDB >>>>>', error });
-  }
+  connectToMongoDB(async (db) => {
+    const nickname = trimAndLowerCaseFn(req.params.nickname);
+    const dbNickname = await db.collection('entries').findOne({ nickname });
+    if (dbNickname !== null) {
+      res.send(dbNickname);
+    } else {
+      res.send("Nickname doesn't exist 😿 ");
+    }
+  }, res);
 });
 
 // local MongoDB - POST (insert ONE document)
 app.post('/my-favourites/newentry', async (req, res) => {
+  const { nickname, email, coke, joke, countries, durians, likes } = req.body;
   const entry = {
-    timestame: new Date(),
-    nickname: ' ALAdDIn   ',
-    email: '       iloveprincessjasmine@gmail.com',
-    'favourite-color': '     PurPLE',
-    'favourite-series1': '    x ',
-    'favourite-series2': 'Y',
-    'favourite-series3': 'z     ',
-    coke: '0.5',
-    joke: '       xyz     ',
-    countries: 3.0,
-    durians: true,
-    likes: '7',
+    nickname,
+    email,
+    coke,
+    joke,
+    'favourite-color': req.body['favourite-color'],
+    'favourite-series1': req.body['favourite-series1'],
+    'favourite-series2': req.body['favourite-series2'],
+    'favourite-series3': req.body['favourite-series3'],
+    countries,
+    durians,
+    likes,
   };
-
   const newEntry = mkMyFavourites(entry);
 
-  try {
-    const client = await MongoClient.connect(MONGO_URL);
-    const db = client.db(MONGO_DB);
-    const entries = await db.collection('entries').insertOne(newEntry);
-
-    res.status(200).type('application/json');
-    res.send(entries);
-    console.log('ENTRIES >>>> ', entries);
-    client.close();
-  } catch (error) {
-    res.status(500).type('application/json');
-    res.json({ message: 'Error connecting to MongoDB >>>>>', error });
-  }
+  connectToMongoDB(async (db) => {
+    const dbNickname = await db
+      .collection('entries')
+      .findOne({ nickname: trimAndLowerCaseFn(req.body.nickname) });
+    if (dbNickname === null) {
+      const entries = await db.collection('entries').insertOne(newEntry);
+      res.send(entries);
+    } else {
+      res.send('Nickname already exist 🤦‍♂️ ');
+    }
+  }, res);
 });
 
 // local MongoDB - POST (increment likes by 1)
 app.post('/my-favourites/:nickname/likes', async (req, res) => {
   const nickname = trimAndLowerCaseFn(req.params.nickname);
-  try {
-    const client = await MongoClient.connect(MONGO_URL);
-    const db = client.db(MONGO_DB);
-    await db
-      .collection('entries')
-      .updateOne({ nickname }, { $inc: { likes: 1 } });
+  connectToMongoDB(async (db) => {
+    const dbNickname = await db.collection('entries').findOne({ nickname });
+    if (dbNickname !== null) {
+      await db
+        .collection('entries')
+        .updateOne({ nickname }, { $inc: { likes: 1 } });
 
-    const entries = await db.collection('entries').findOne({ nickname });
-
-    res.status(200).type('application/json');
-    res.send(entries);
-    console.log('ENTRIES >>>> ', entries);
-    client.close();
-  } catch (error) {
-    res.status(500).type('application/json');
-    res.json({ message: 'Error connecting to MongoDB >>>>>', error });
-  }
+      res.send('Entry has an extra LIKE 👍 !');
+    } else {
+      res.send("Nickname doesn't exist 🤷‍♂️");
+    }
+  }, res);
 });
 
 // local MongoDB - PUT
 app.put('/my-favourites/:nickname/edit', async (req, res) => {
+  const paramsnickname = trimAndLowerCaseFn(req.params.nickname);
+  const { nickname, email, coke, joke, countries, durians, likes } = req.body;
   const entry = {
-    timestame: new Date(),
-    nickname: ' ALAdDIn   ',
-    email: '       iloveprincessjasmine@gmail.com',
-    'favourite-color': '     PInk',
-    'favourite-series1': '    x ',
-    'favourite-series2': 'Y',
-    'favourite-series3': 'z     ',
-    coke: '0.5',
-    joke: '       xyz     ',
-    countries: 3.0,
-    durians: true,
-    likes: '7',
+    nickname,
+    email,
+    coke,
+    joke,
+    'favourite-color': req.body['favourite-color'],
+    'favourite-series1': req.body['favourite-series1'],
+    'favourite-series2': req.body['favourite-series2'],
+    'favourite-series3': req.body['favourite-series3'],
+    countries,
+    durians,
+    likes,
   };
-
   const newEntry = mkMyFavourites(entry);
-  console.log('NEW ENTRY >>>>>>> ', newEntry);
-  const nickname = trimAndLowerCaseFn(req.params.nickname);
-  try {
-    const client = await MongoClient.connect(MONGO_URL);
-    const db = client.db(MONGO_DB);
-    await db.collection('entries').updateOne(
-      { nickname },
-      {
-        $set: {
-          nickname: newEntry.nickname,
-          email: newEntry.email,
-          'favourite-color': newEntry['favourite-color'],
-          'favourite-series': newEntry['favourite-series'],
-          coke: newEntry.coke,
-          joke: newEntry.joke,
-          countries: newEntry.countries,
-          durians: newEntry.durians,
-          likes: newEntry.likes,
-        },
-      }
-    );
 
-    const entries = await db.collection('entries').findOne({ nickname });
+  connectToMongoDB(async (db) => {
+    const dbNickname = await db
+      .collection('entries')
+      .findOne({ nickname: paramsnickname });
 
-    res.status(200).type('application/json');
-    res.send(entries);
-    console.log('ENTRIES >>>> ', entries);
-    client.close();
-  } catch (error) {
-    res.status(500).type('application/json');
-    res.json({ message: 'Error connecting to MongoDB >>>>>', error });
-  }
+    if (dbNickname !== null) {
+      await db.collection('entries').updateOne(
+        { nickname: paramsnickname },
+        {
+          $set: {
+            nickname: newEntry.nickname,
+            email: newEntry.email,
+            'favourite-color': newEntry['favourite-color'],
+            'favourite-series': newEntry['favourite-series'],
+            coke: newEntry.coke,
+            joke: newEntry.joke,
+            countries: newEntry.countries,
+            durians: newEntry.durians,
+            likes: newEntry.likes,
+          },
+        }
+      );
+      res.send('Entry is updated SUCCESSFULLY! 🥰');
+    } else {
+      res.send("Nickname doesn't exist 🤷‍♂️");
+    }
+  }, res);
 });
 
 // local MongoDB - DELETE
 app.delete('/my-favourites/:nickname/delete', async (req, res) => {
   const nickname = trimAndLowerCaseFn(req.params.nickname);
-  try {
-    const client = await MongoClient.connect(MONGO_URL);
-    const db = client.db(MONGO_DB);
-    await db.collection('entries').deleteOne({ nickname });
+  connectToMongoDB(async (db) => {
+    const nicknameExists = await db.collection('entries').findOne({ nickname });
 
-    const entries = await db
-      .collection('entries')
-      .find()
-      .sort({ _id: -1 })
-      .toArray();
-
-    res.status(200).type('application/json');
-    res.send(entries);
-    console.log('ENTRIES >>>> ', entries);
-    client.close();
-  } catch (error) {
-    res.status(500).type('application/json');
-    res.json({ message: 'Error connecting to MongoDB >>>>>', error });
-  }
+    if (nicknameExists !== null) {
+      await db.collection('entries').deleteOne({ nickname });
+      res.send('Entry is deleted ❎ SUCCESSFULLY!');
+    } else {
+      res.send("Nickname doesn't exist 🤷‍♂️");
+    }
+  }, res);
 });
 
 // connect to MongoDB and listen to PORT
