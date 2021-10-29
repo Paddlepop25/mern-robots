@@ -58,7 +58,7 @@ const mkMyFavourites = (params) => {
 app.use(express.json());
 app.use(morgan('combined'));
 
-// local MongoDB - get all documents
+// local MongoDB - GET (all documents)
 app.get('/my-favourites', async (req, res) => {
   connectToMongoDB(async (db) => {
     const entries = await db
@@ -70,7 +70,7 @@ app.get('/my-favourites', async (req, res) => {
   }, res);
 });
 
-// local MongoDB - GET
+// local MongoDB - GET (1 entry)
 app.get('/my-favourites/:nickname', async (req, res) => {
   connectToMongoDB(async (db) => {
     const nickname = trimAndLowerCaseFn(req.params.nickname);
@@ -131,7 +131,7 @@ app.post('/my-favourites/:nickname/likes', async (req, res) => {
   }, res);
 });
 
-// local MongoDB - PUT
+// local MongoDB - PUT (edit 1 entry)
 app.put('/my-favourites/:nickname/edit', async (req, res) => {
   const paramsnickname = trimAndLowerCaseFn(req.params.nickname);
   const { nickname, email, coke, joke, countries, durians, likes } = req.body;
