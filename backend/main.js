@@ -14,6 +14,32 @@ const mongoClient = new MongoClient(MONGO_URL, {
   useUnifiedTopology: true,
 });
 
+// make utility function
+const trimAndLowerCaseFn = (input) => {
+  return input.trim().toLowerCase();
+};
+
+// make body object
+const mkMyFavourites = (params) => {
+  const favSeries = [
+    trimAndLowerCaseFn(params['favourite-series1']),
+    trimAndLowerCaseFn(params['favourite-series2']),
+    trimAndLowerCaseFn(params['favourite-series3']),
+  ];
+  return {
+    timestamp: new Date(),
+    nickname: trimAndLowerCaseFn(params.nickname),
+    email: trimAndLowerCaseFn(params.email),
+    'favourite-color': trimAndLowerCaseFn(params['favourite-color']),
+    'favourite-series': favSeries,
+    coke: Number(params.coke),
+    joke: trimAndLowerCaseFn(params.joke),
+    countries: Number(params.countries),
+    durians: JSON.parse(params.durians),
+    likes: Number(params.likes),
+  };
+};
+
 app.use(express.json());
 app.use(morgan('combined'));
 
@@ -39,7 +65,7 @@ app.get('/my-favourites', async (req, res) => {
 
 // local MongoDB - GET
 app.get('/my-favourites/:nickname', async (req, res) => {
-  const nickname = req.params.nickname.trim().toLowerCase();
+  const nickname = trimAndLowerCaseFn(req.params.nickname);
   try {
     const client = await MongoClient.connect(MONGO_URL);
     const db = client.db(MONGO_DB);
@@ -56,16 +82,22 @@ app.get('/my-favourites/:nickname', async (req, res) => {
 
 // local MongoDB - POST (insert ONE document)
 app.post('/my-favourites/newentry', async (req, res) => {
-  const newEntry = {
-    nickname: 'aladdin',
-    email: 'iloveprincessjasmine@gmail.com',
-    'favourite-color': 'purple',
-    'favourite-series': ['x', 'y', 'z'],
-    coke: 0.5,
-    joke: 'xyz',
-    countries: 3,
-    likes: 7,
+  const entry = {
+    timestame: new Date(),
+    nickname: ' ALAdDIn   ',
+    email: '       iloveprincessjasmine@gmail.com',
+    'favourite-color': '     PurPLE',
+    'favourite-series1': '    x ',
+    'favourite-series2': 'Y',
+    'favourite-series3': 'z     ',
+    coke: '0.5',
+    joke: '       xyz     ',
+    countries: 3.0,
+    durians: true,
+    likes: '7',
   };
+
+  const newEntry = mkMyFavourites(entry);
 
   try {
     const client = await MongoClient.connect(MONGO_URL);
@@ -84,7 +116,7 @@ app.post('/my-favourites/newentry', async (req, res) => {
 
 // local MongoDB - POST (increment likes by 1)
 app.post('/my-favourites/:nickname/likes', async (req, res) => {
-  const nickname = req.params.nickname.trim().toLowerCase();
+  const nickname = trimAndLowerCaseFn(req.params.nickname);
   try {
     const client = await MongoClient.connect(MONGO_URL);
     const db = client.db(MONGO_DB);
@@ -106,17 +138,24 @@ app.post('/my-favourites/:nickname/likes', async (req, res) => {
 
 // local MongoDB - PUT
 app.put('/my-favourites/:nickname/edit', async (req, res) => {
-  const newEntry = {
-    nickname: 'aladdin',
-    email: 'ziloveprincessjasmine@gmail.com',
-    'favourite-color': 'purple',
-    'favourite-series': ['zx', 'zy', 'z'],
-    coke: 70.5,
-    joke: 'xyz',
-    countries: 73,
-    likes: 1,
+  const entry = {
+    timestame: new Date(),
+    nickname: ' ALAdDIn   ',
+    email: '       iloveprincessjasmine@gmail.com',
+    'favourite-color': '     PInk',
+    'favourite-series1': '    x ',
+    'favourite-series2': 'Y',
+    'favourite-series3': 'z     ',
+    coke: '0.5',
+    joke: '       xyz     ',
+    countries: 3.0,
+    durians: true,
+    likes: '7',
   };
-  const nickname = req.params.nickname.trim().toLowerCase();
+
+  const newEntry = mkMyFavourites(entry);
+  console.log('NEW ENTRY >>>>>>> ', newEntry);
+  const nickname = trimAndLowerCaseFn(req.params.nickname);
   try {
     const client = await MongoClient.connect(MONGO_URL);
     const db = client.db(MONGO_DB);
@@ -131,6 +170,7 @@ app.put('/my-favourites/:nickname/edit', async (req, res) => {
           coke: newEntry.coke,
           joke: newEntry.joke,
           countries: newEntry.countries,
+          durians: newEntry.durians,
           likes: newEntry.likes,
         },
       }
@@ -150,7 +190,7 @@ app.put('/my-favourites/:nickname/edit', async (req, res) => {
 
 // local MongoDB - DELETE
 app.delete('/my-favourites/:nickname/delete', async (req, res) => {
-  const nickname = req.params.nickname.trim().toLowerCase();
+  const nickname = trimAndLowerCaseFn(req.params.nickname);
   try {
     const client = await MongoClient.connect(MONGO_URL);
     const db = client.db(MONGO_DB);
