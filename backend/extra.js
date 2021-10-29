@@ -94,7 +94,7 @@ app.post('/my-favourites/newentry', (req, res) => {
 });
 
 // local test PUT
-app.put('/my-favourites/edit/:nickname', (req, res) => {
+app.put('/my-favourites/:nickname/edit', (req, res) => {
   const nickname = req.params.nickname;
   const updatedMyFavouritesInfo = myFavouritesInfo.filter(
     (who) => who.nickname === nickname
@@ -106,7 +106,7 @@ app.put('/my-favourites/edit/:nickname', (req, res) => {
 });
 
 // local test DELETE
-app.delete('/my-favourites/delete/:nickname', (req, res) => {
+app.delete('/my-favourites/:nickname/delete', (req, res) => {
   const nickname = req.params.nickname;
   const updatedMyFavouritesInfo = myFavouritesInfo.filter(
     (who) => who.nickname !== nickname

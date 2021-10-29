@@ -37,7 +37,7 @@ app.get('/my-favourites', async (req, res) => {
   }
 });
 
-// local MongoDB - get document by nickname
+// local MongoDB - GET
 app.get('/my-favourites/:nickname', async (req, res) => {
   const nickname = req.params.nickname.trim().toLowerCase();
   try {
@@ -54,7 +54,7 @@ app.get('/my-favourites/:nickname', async (req, res) => {
   }
 });
 
-// local MongoDB - insert ONE document
+// local MongoDB - POST (insert ONE document)
 app.post('/my-favourites/newentry', async (req, res) => {
   const newEntry = {
     nickname: 'aladdin',
@@ -82,7 +82,7 @@ app.post('/my-favourites/newentry', async (req, res) => {
   }
 });
 
-// local MongoDB - increment likes by 1
+// local MongoDB - POST (increment likes by 1)
 app.post('/my-favourites/:nickname/likes', async (req, res) => {
   const nickname = req.params.nickname.trim().toLowerCase();
   try {
@@ -104,6 +104,75 @@ app.post('/my-favourites/:nickname/likes', async (req, res) => {
   }
 });
 
+// local MongoDB - PUT
+app.put('/my-favourites/:nickname/edit', async (req, res) => {
+  const newEntry = {
+    nickname: 'aladdin',
+    email: 'ziloveprincessjasmine@gmail.com',
+    'favourite-color': 'purple',
+    'favourite-series': ['zx', 'zy', 'z'],
+    coke: 70.5,
+    joke: 'xyz',
+    countries: 73,
+    likes: 1,
+  };
+  const nickname = req.params.nickname.trim().toLowerCase();
+  try {
+    const client = await MongoClient.connect(MONGO_URL);
+    const db = client.db(MONGO_DB);
+    await db.collection('entries').updateOne(
+      { nickname },
+      {
+        $set: {
+          nickname: newEntry.nickname,
+          email: newEntry.email,
+          'favourite-color': newEntry['favourite-color'],
+          'favourite-series': newEntry['favourite-series'],
+          coke: newEntry.coke,
+          joke: newEntry.joke,
+          countries: newEntry.countries,
+          likes: newEntry.likes,
+        },
+      }
+    );
+
+    const entries = await db.collection('entries').findOne({ nickname });
+
+    res.status(200).type('application/json');
+    res.send(entries);
+    console.log('ENTRIES >>>> ', entries);
+    client.close();
+  } catch (error) {
+    res.status(500).type('application/json');
+    res.json({ message: 'Error connecting to MongoDB >>>>>', error });
+  }
+});
+
+// local MongoDB - DELETE
+app.delete('/my-favourites/:nickname/delete', async (req, res) => {
+  const nickname = req.params.nickname.trim().toLowerCase();
+  try {
+    const client = await MongoClient.connect(MONGO_URL);
+    const db = client.db(MONGO_DB);
+    await db.collection('entries').deleteOne({ nickname });
+
+    const entries = await db
+      .collection('entries')
+      .find()
+      .sort({ _id: -1 })
+      .toArray();
+
+    res.status(200).type('application/json');
+    res.send(entries);
+    console.log('ENTRIES >>>> ', entries);
+    client.close();
+  } catch (error) {
+    res.status(500).type('application/json');
+    res.json({ message: 'Error connecting to MongoDB >>>>>', error });
+  }
+});
+
+// connect to MongoDB and listen to PORT
 mongoClient
   .connect()
   .then(() => {
