@@ -1,11 +1,12 @@
 import React from 'react';
-import Form from './components/Form/Form';
+import { BrowserRouter as Router } from 'react-router-dom';
+import HomePage from './components/Pages/HomePage';
 
 function App() {
   return (
-    <>
-      <Form />
-    </>
+    <Router>
+      <HomePage />
+    </Router>
   );
 }
 
