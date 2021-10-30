@@ -1,18 +1,29 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { NavbarStyled } from './Navbar.styles';
+import {
+  LinkStyled,
+  ListStyled,
+  NavbarStyled,
+  UnorderedListStyled,
+} from './Navbar.styles';
 
 const Navbar = () => {
   return (
     <>
       <NavbarStyled>
-        <ul>
-          <li>
-            <Link to='/'>Did You Know?</Link>
-            <Link to='/form'>Form</Link>
-            <Link to='/entries'>Entries</Link>
-          </li>
-        </ul>
+        <UnorderedListStyled>
+          <ListStyled>
+            <LinkStyled>
+              <Link to='/'>Did You Know?</Link>
+            </LinkStyled>
+            <LinkStyled>
+              <Link to='/form'>Form</Link>
+            </LinkStyled>
+            <LinkStyled>
+              <Link to='/entries'>Entries</Link>
+            </LinkStyled>
+          </ListStyled>
+        </UnorderedListStyled>
       </NavbarStyled>
     </>
   );
