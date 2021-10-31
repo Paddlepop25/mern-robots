@@ -1,7 +1,7 @@
 import React from 'react';
 import { Title } from './Form.styles';
 
-const Form = () => {
+const Form: React.FC = () => {
   return (
     <form>
       <Title>Tell me</Title>

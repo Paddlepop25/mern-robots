@@ -20,7 +20,7 @@ const Navbar = () => {
               <Link to='/form'>Form</Link>
             </LinkStyled>
             <LinkStyled>
-              <Link to='/entries'>Entries</Link>
+              <Link to='/my-favourites'>Robots</Link>
             </LinkStyled>
           </ListStyled>
         </UnorderedListStyled>

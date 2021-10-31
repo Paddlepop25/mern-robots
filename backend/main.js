@@ -22,7 +22,6 @@ const connectToMongoDB = async (operations, res) => {
     const db = client.db(MONGO_DB);
     await operations(db);
     client.close();
-    res.status(200).type('application/json');
   } catch (error) {
     res.status(500).type('application/json');
     res.json({ message: 'Error connecting to MongoDB', 'ERROR >>>>> ': error });
@@ -66,6 +65,7 @@ app.get('/my-favourites', async (req, res) => {
       .find()
       .sort({ _id: -1 })
       .toArray();
+    res.status(200).type('application/json');
     res.send(entries);
   }, res);
 });
@@ -76,8 +76,10 @@ app.get('/my-favourites/:nickname', async (req, res) => {
     const nickname = trimAndLowerCaseFn(req.params.nickname);
     const dbNickname = await db.collection('entries').findOne({ nickname });
     if (dbNickname !== null) {
+      res.status(200).type('application/json');
       res.send(dbNickname);
     } else {
+      res.status(200).type('application/json');
       res.send("Nickname doesn't exist 😿 ");
     }
   }, res);
@@ -107,6 +109,8 @@ app.post('/my-favourites/newentry', async (req, res) => {
       .findOne({ nickname: trimAndLowerCaseFn(req.body.nickname) });
     if (dbNickname === null) {
       const entries = await db.collection('entries').insertOne(newEntry);
+
+      res.status(200).type('application/json');
       res.send(entries);
     } else {
       res.send('Nickname already exist 🤦‍♂️ ');
@@ -124,6 +128,7 @@ app.post('/my-favourites/:nickname/likes', async (req, res) => {
         .collection('entries')
         .updateOne({ nickname }, { $inc: { likes: 1 } });
 
+      res.status(200).type('application/json');
       res.send('Entry has an extra LIKE 👍 !');
     } else {
       res.send("Nickname doesn't exist 🤷‍♂️");
@@ -172,6 +177,8 @@ app.put('/my-favourites/:nickname/edit', async (req, res) => {
           },
         }
       );
+
+      res.status(200).type('application/json');
       res.send('Entry is updated SUCCESSFULLY! 🥰');
     } else {
       res.send("Nickname doesn't exist 🤷‍♂️");
@@ -187,6 +194,8 @@ app.delete('/my-favourites/:nickname/delete', async (req, res) => {
 
     if (nicknameExists !== null) {
       await db.collection('entries').deleteOne({ nickname });
+
+      res.status(200).type('application/json');
       res.send('Entry is deleted ❎ SUCCESSFULLY!');
     } else {
       res.send("Nickname doesn't exist 🤷‍♂️");

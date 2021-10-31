@@ -4,6 +4,7 @@
 const myFavouritesInfo = [
   {
     timestamp: new Date(),
+    robot: 'https://robohash.org/2',
     nickname: 'scooby doo',
     email: 'whereareyou123@gmail.com',
     'favourite-color': 'White',
@@ -16,6 +17,7 @@ const myFavouritesInfo = [
   },
   {
     timestamp: new Date(),
+    robot: 'https://robohash.org/4',
     nickname: 'cinderella',
     email: 'pumpkincoach123@gmail.com',
     'favourite-color': 'Blue',
@@ -28,6 +30,7 @@ const myFavouritesInfo = [
   },
   {
     timestamp: new Date(),
+    robot: 'https://robohash.org/5',
     nickname: 'little lulu',
     email: 'sheiscute123@gmail.com',
     'favourite-color': 'Pink',

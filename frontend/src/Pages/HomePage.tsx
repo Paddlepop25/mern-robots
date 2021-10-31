@@ -1,6 +1,6 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 
-const HomePage = () => {
+const HomePage: React.FC = () => {
   return (
     <>
       <h1>HomePage</h1>
