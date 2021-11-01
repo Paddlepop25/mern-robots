@@ -1,4 +1,5 @@
 import React from 'react';
+import { Container } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 import {
   LinkStyled,
@@ -9,23 +10,21 @@ import {
 
 const Navbar = () => {
   return (
-    <>
-      <NavbarStyled>
-        <UnorderedListStyled>
-          <ListStyled>
-            <LinkStyled>
-              <Link to='/'>Did You Know?</Link>
-            </LinkStyled>
-            <LinkStyled>
-              <Link to='/form'>Form</Link>
-            </LinkStyled>
-            <LinkStyled>
-              <Link to='/my-favourites'>Robots</Link>
-            </LinkStyled>
-          </ListStyled>
-        </UnorderedListStyled>
-      </NavbarStyled>
-    </>
+    <NavbarStyled>
+      <UnorderedListStyled>
+        <ListStyled>
+          <LinkStyled>
+            <Link to='/'>Did You Know?</Link>
+          </LinkStyled>
+          <LinkStyled>
+            <Link to='/form'>Form</Link>
+          </LinkStyled>
+          <LinkStyled>
+            <Link to='/my-favourites'>Robots</Link>
+          </LinkStyled>
+        </ListStyled>
+      </UnorderedListStyled>
+    </NavbarStyled>
   );
 };
 

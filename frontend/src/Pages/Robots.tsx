@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import { Button, Card } from 'react-bootstrap';
+import { Button, Card, Col, Container, Row } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
-import { RobotsStyled } from './Robots.styles';
+import { LikesStyled, RobotsStyled } from './Robots.styles';
 
 export interface RobotType {
   coke: number;
@@ -30,28 +30,49 @@ const Favourites: React.FC = (): React.ReactElement => {
     getRobots();
   }, []);
 
+  const upVoteHandler = async (nickname: string) => {
+    const result = await fetch(`/my-favourites/${nickname}/likes`, {
+      method: 'POST',
+    });
+    const body = await result.json();
+    setRobots(body);
+  };
+
   return (
-    <>
-      <RobotsStyled>
+    <RobotsStyled>
+      <Container>
         {!robots && <p>LOADING ....</p>}
-        {robots &&
-          robots.map((robot) => (
-            <div key={robot._id}>
-              <Card style={{ width: '18rem', background: '#ffcce6' }}>
-                <Card.Img variant='top' src={robot.robot} />
-                <Card.Body>
-                  <Link to={`/my-favourites/${robot.nickname}`}>
-                    <Button variant='info' className='capitalize'>
-                      {robot.nickname}
+        <Row>
+          {robots &&
+            robots.map((robot) => (
+              <Col xs={12} md={4} lg={3} key={robot._id}>
+                <Card style={{ width: '18rem', background: '#ffcce6' }}>
+                  <Card.Img variant='top' src={robot.robot} />
+                  <Card.Body>
+                    <Link to={`/my-favourites/${robot.nickname}`}>
+                      <Button variant='info' className='capitalize mx-1 mb-2'>
+                        {robot.nickname}
+                      </Button>
+                    </Link>
+                    <Button
+                      variant='primary'
+                      className='mx-1 mb-2'
+                      onClick={() => upVoteHandler(robot.nickname)}
+                    >
+                      Like 👍
                     </Button>
-                  </Link>
-                </Card.Body>
-              </Card>
-              <br />
-            </div>
-          ))}
-      </RobotsStyled>
-    </>
+                    <br />
+                    <span>
+                      Likes : <LikesStyled>{robot.likes}</LikesStyled>
+                    </span>
+                  </Card.Body>
+                </Card>
+                <br />
+              </Col>
+            ))}
+        </Row>
+      </Container>
+    </RobotsStyled>
   );
 };
 
