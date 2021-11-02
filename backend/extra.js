@@ -1,12 +1,12 @@
 // local testing code from main.js
 
-// db.entries.insertMany([]);
+// db.robotsInfo.insertMany([]);
 // mock data
-const myFavouritesInfo = [
+const myRobotsInfo = [
   {
     timestamp: new Date(),
     robot: 'https://robohash.org/22',
-    nickname: 'fred flintstone',
+    nickname: 'fred & wilma',
     email: 'yabadabadoo123@hotmail.com',
     'favourite-color': 'Orange',
     'favourite-series': ['FullHouse', 'Moana', 'Superman'],
@@ -18,8 +18,8 @@ const myFavouritesInfo = [
   },
   {
     timestamp: new Date(),
-    robot: 'https://robohash.org/83',
-    nickname: 'barney flintstone',
+    robot: 'https://robohash.org/813',
+    nickname: 'supremo',
     email: 'yabadabadoo123@bedrock.com',
     'favourite-color': 'Turqoise',
     'favourite-series': ['Wolfgang', 'Moana', 'Superman'],
@@ -31,7 +31,7 @@ const myFavouritesInfo = [
   },
   {
     timestamp: new Date(),
-    robot: 'https://robohash.org/112',
+    robot: 'https://robohash.org/492',
     nickname: 'casper',
     email: 'thefriendlyghost@yahoo.com',
     'favourite-color': 'White',
@@ -44,7 +44,7 @@ const myFavouritesInfo = [
   },
   {
     timestamp: new Date(),
-    robot: 'https://robohash.org/423',
+    robot: 'https://robohash.org/812',
     nickname: 'batman',
     email: 'fredismine@yahoo.com',
     'favourite-color': 'Pink',
@@ -57,7 +57,7 @@ const myFavouritesInfo = [
   },
   {
     timestamp: new Date(),
-    robot: 'https://robohash.org/921',
+    robot: 'https://robohash.org/81',
     nickname: 'snowwhite',
     email: 'apple123@gmail.com',
     'favourite-color': 'Red',
@@ -71,7 +71,7 @@ const myFavouritesInfo = [
   {
     timestamp: new Date(),
     robot: 'https://robohash.org/534',
-    nickname: 'Lao Fu Zhi',
+    nickname: 'lao fu zhi',
     email: 'liangpopo@hotmail.com',
     'favourite-color': 'Gray',
     'favourite-series': ['Batman', 'Lucifer', 'Catman'],
@@ -83,7 +83,7 @@ const myFavouritesInfo = [
   },
   {
     timestamp: new Date(),
-    robot: 'https://robohash.org/631',
+    robot: 'https://robohash.org/824',
     nickname: 'the jetsons',
     email: 'thejetsons123@future.com',
     'favourite-color': 'Blue',
@@ -110,7 +110,7 @@ const myFavouritesInfo = [
   {
     timestamp: new Date(),
     robot: 'https://robohash.org/43',
-    nickname: 'wilma flintstone',
+    nickname: 'beep beep',
     email: 'fredismine@yahoo.com',
     'favourite-color': 'Pink',
     'favourite-series': ['3rd Rock From the Sun', 'Zack & Cody', 'Kojak'],
@@ -149,7 +149,7 @@ const myFavouritesInfo = [
   {
     timestamp: new Date(),
     robot: 'https://robohash.org/56',
-    nickname: 'Pebbles',
+    nickname: 'pebbles',
     email: 'bambam@bedrock.com',
     'favourite-color': 'Violet',
     'favourite-series': ['Catman', 'Silicon Valley', 'FullHouse'],
@@ -184,7 +184,7 @@ app.get('/', (req, res) => {
 });
 
 // local test GET
-app.get('/my-favourites/:nickname', (req, res) => {
+app.get('/robots/:nickname', (req, res) => {
   const nickname = req.params.nickname;
   res.status(200).type('application/json');
   res.send(nickname); // see in postman
@@ -192,33 +192,33 @@ app.get('/my-favourites/:nickname', (req, res) => {
 });
 
 // local test POST
-app.post('/my-favourites', (req, res) => {
+app.post('/robots', (req, res) => {
   const nickname = req.body.nickname;
   const age = req.body.age;
   res.send(`Hello ${nickname}, you are ${age} years young`); // see in postman
 });
 
 // local test GET
-app.get('/my-favourites', (req, res) => {
+app.get('/robots', (req, res) => {
   res.status(200).type('application/json');
-  res.send(myFavouritesInfo);
+  res.send(myRobotsInfo);
 });
 
 // local test POST
-app.post('/my-favourites/:nickname/likes', (req, res) => {
+app.post('/robots/:nickname/likes', (req, res) => {
   const nickname = req.params.nickname;
-  const likesOfNickname = myFavouritesInfo.filter(
+  const likesOfNickname = myRobotsInfo.filter(
     (who) => who.nickname === nickname
   )[0];
   // console.log('likesOfNickname >>>> ', likesOfNickname.likes);
   likesOfNickname.likes += 1;
   res.status(200).type('application/json');
   res.send(`${nickname} now has ${likesOfNickname.likes} likes`);
-  console.log('NEW INFO >>>>>>>> ', myFavouritesInfo);
+  console.log('NEW INFO >>>>>>>> ', myRobotsInfo);
 });
 
 // local test POST
-app.post('/my-favourites/newentry', (req, res) => {
+app.post('/robots/newentry', (req, res) => {
   const newEntry = {
     nickname: 'Aladdin',
     email: 'iloveprincessjasmine@gmail.com',
@@ -229,31 +229,31 @@ app.post('/my-favourites/newentry', (req, res) => {
     countries: 3,
     likes: 7,
   };
-  myFavouritesInfo.push(newEntry);
+  myRobotsInfo.push(newEntry);
   res.status(200).type('application/json');
-  res.send(myFavouritesInfo);
-  console.log('NEW INFO >>>>>>>> ', myFavouritesInfo);
+  res.send(myRobotsInfo);
+  console.log('NEW INFO >>>>>>>> ', myRobotsInfo);
 });
 
 // local test PUT
-app.put('/my-favourites/:nickname/edit', (req, res) => {
+app.put('/robots/:nickname/edit', (req, res) => {
   const nickname = req.params.nickname;
-  const updatedMyFavouritesInfo = myFavouritesInfo.filter(
+  const updatedMyFavouritesInfo = myRobotsInfo.filter(
     (who) => who.nickname === nickname
   )[0];
   updatedMyFavouritesInfo.nickname = 'Rumpelstilskin';
   res.status(200).type('application/json');
   res.send(updatedMyFavouritesInfo);
-  console.log('NEW INFO >>>>>>>> ', myFavouritesInfo);
+  console.log('NEW INFO >>>>>>>> ', myRobotsInfo);
 });
 
 // local test DELETE
-app.delete('/my-favourites/:nickname/delete', (req, res) => {
+app.delete('/robots/:nickname/delete', (req, res) => {
   const nickname = req.params.nickname;
-  const updatedMyFavouritesInfo = myFavouritesInfo.filter(
+  const updatedMyFavouritesInfo = myRobotsInfo.filter(
     (who) => who.nickname !== nickname
   );
   res.status(200).type('application/json');
   res.send(updatedMyFavouritesInfo);
-  console.log('NEW INFO >>>>>>>> ', myFavouritesInfo);
+  console.log('NEW INFO >>>>>>>> ', myRobotsInfo);
 });

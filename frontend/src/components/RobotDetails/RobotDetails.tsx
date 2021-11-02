@@ -2,8 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Button, Col, Container, Row } from 'react-bootstrap';
 import { useParams, useHistory } from 'react-router-dom';
 import { RobotType } from '../../Pages/Robots';
-import { RobotDetailsStyled } from './RobotDetails.styles';
-
+import { ButtonsStyled, RobotDetailsStyled } from './RobotDetails.styles';
 interface NickNameType {
   nickname: string;
 }
@@ -17,7 +16,7 @@ const RobotDetails: React.FC = () => {
 
   useEffect(() => {
     const getRobot = async () => {
-      const results = await fetch(`/my-favourites/${robotNickname}`);
+      const results = await fetch(`/robots/${robotNickname}`);
       const response = await results.json();
       setRobot(response);
     };
@@ -25,15 +24,22 @@ const RobotDetails: React.FC = () => {
   }, []);
 
   const onBackHandler = () => {
-    history.push('/my-favourites');
+    history.push('/robots');
   };
 
   const onEditHandler = () => {
     console.log('edit');
   };
 
-  const onDeleteHandler = () => {
-    console.log('delete');
+  const onDeleteHandler = async () => {
+    // create modal
+    const response = await fetch(`/robots/${robotNickname}/delete`, {
+      method: 'DELETE',
+    });
+
+    if (response.status === 200) {
+      history.push('/robots');
+    }
   };
 
   return (
@@ -80,23 +86,29 @@ const RobotDetails: React.FC = () => {
                 <p>
                   👍 Likes : <code>{robot.likes}</code>
                 </p>
-                <Button
-                  variant='warning'
-                  className='px-4'
-                  onClick={onBackHandler}
-                >
-                  Back
-                </Button>
-                <Button
-                  variant='outline-dark'
-                  className='px-4 mx-3 '
-                  onClick={onEditHandler}
-                >
-                  Edit
-                </Button>
-                <Button variant='outline-danger' onClick={onDeleteHandler}>
-                  Delete
-                </Button>
+                <ButtonsStyled>
+                  <Button
+                    variant='warning'
+                    className='px-4 mt-1'
+                    onClick={onBackHandler}
+                  >
+                    Back
+                  </Button>
+                  <Button
+                    variant='outline-dark'
+                    className='px-4 mx-3 mt-1'
+                    onClick={onEditHandler}
+                  >
+                    Edit
+                  </Button>
+                  <Button
+                    variant='outline-danger'
+                    className='mt-1'
+                    onClick={onDeleteHandler}
+                  >
+                    Delete
+                  </Button>
+                </ButtonsStyled>
               </Col>
             </Row>
           </Container>

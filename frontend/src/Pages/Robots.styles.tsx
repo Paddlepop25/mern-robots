@@ -5,6 +5,14 @@ export const RobotsStyled = styled.div`
     text-align: center;
   }
 
+  .card-img-top {
+    transition: transform 0.8s;
+  }
+
+  .card-img-top: hover {
+    transform: scale(1.08);
+  }
+
   .card-body {
     text-align: center;
     margin: 1rem;

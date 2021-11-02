@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 
 export const RobotDetailsStyled = styled.div`
-  margin: 2rem;
+  margin: 1rem;
 
   code {
     color: #db7093;
@@ -11,4 +11,8 @@ export const RobotDetailsStyled = styled.div`
   .capitalize {
     text-transform: capitalize;
   }
+`;
+
+export const ButtonsStyled = styled.div`
+  margin-bottom: 3rem;
 `;

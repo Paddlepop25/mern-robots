@@ -23,7 +23,7 @@ const Favourites: React.FC = (): React.ReactElement => {
 
   useEffect(() => {
     const getRobots = async () => {
-      const results = await fetch('/my-favourites');
+      const results = await fetch('/robots');
       const response = await results.json();
       setRobots(response);
     };
@@ -31,7 +31,7 @@ const Favourites: React.FC = (): React.ReactElement => {
   }, []);
 
   const upVoteHandler = async (nickname: string) => {
-    const result = await fetch(`/my-favourites/${nickname}/likes`, {
+    const result = await fetch(`/robots/${nickname}/likes`, {
       method: 'POST',
     });
     const body = await result.json();
@@ -45,11 +45,11 @@ const Favourites: React.FC = (): React.ReactElement => {
         <Row>
           {robots &&
             robots.map((robot) => (
-              <Col xs={12} md={4} lg={3} key={robot._id}>
+              <Col xs={12} md={6} lg={3} key={robot._id}>
                 <Card style={{ width: '18rem', background: '#ffcce6' }}>
                   <Card.Img variant='top' src={robot.robot} />
                   <Card.Body>
-                    <Link to={`/my-favourites/${robot.nickname}`}>
+                    <Link to={`/robots/${robot.nickname}`}>
                       <Button variant='info' className='capitalize mx-1 mb-2'>
                         {robot.nickname}
                       </Button>

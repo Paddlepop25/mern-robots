@@ -57,10 +57,10 @@ app.use(express.json());
 app.use(morgan('combined'));
 
 // local MongoDB - GET (all documents)
-app.get('/my-favourites', async (req, res) => {
+app.get('/robots', async (req, res) => {
   connectToMongoDB(async (db) => {
     const robots = await db
-      .collection('robots')
+      .collection('robotsInfo')
       .find()
       .sort({ _id: -1 })
       .toArray();
@@ -70,10 +70,10 @@ app.get('/my-favourites', async (req, res) => {
 });
 
 // local MongoDB - GET (1 robot)
-app.get('/my-favourites/:nickname', async (req, res) => {
+app.get('/robots/:nickname', async (req, res) => {
   connectToMongoDB(async (db) => {
     const nickname = trimAndLowerCaseFn(req.params.nickname);
-    const dbNickname = await db.collection('robots').findOne({ nickname });
+    const dbNickname = await db.collection('robotsInfo').findOne({ nickname });
     if (dbNickname !== null) {
       res.status(200).type('application/json');
       res.send(dbNickname);
@@ -85,7 +85,7 @@ app.get('/my-favourites/:nickname', async (req, res) => {
 });
 
 // local MongoDB - POST (insert ONE document)
-app.post('/my-favourites/newrobot', async (req, res) => {
+app.post('/robots/newrobot', async (req, res) => {
   const { nickname, email, coke, joke, countries, durians, likes } = req.body;
   const robot = {
     nickname,
@@ -104,10 +104,10 @@ app.post('/my-favourites/newrobot', async (req, res) => {
 
   connectToMongoDB(async (db) => {
     const dbNickname = await db
-      .collection('robots')
+      .collection('robotsInfo')
       .findOne({ nickname: trimAndLowerCaseFn(req.body.nickname) });
     if (dbNickname === null) {
-      const robots = await db.collection('robots').insertOne(newRobot);
+      const robots = await db.collection('robotsInfo').insertOne(newRobot);
 
       res.status(200).type('application/json');
       res.send(robots);
@@ -118,18 +118,18 @@ app.post('/my-favourites/newrobot', async (req, res) => {
 });
 
 // local MongoDB - POST (increment likes by 1)
-app.post('/my-favourites/:nickname/likes', async (req, res) => {
+app.post('/robots/:nickname/likes', async (req, res) => {
   const nickname = trimAndLowerCaseFn(req.params.nickname);
   connectToMongoDB(async (db) => {
-    const dbNickname = await db.collection('robots').findOne({ nickname });
+    const dbNickname = await db.collection('robotsInfo').findOne({ nickname });
 
     if (dbNickname !== null) {
       await db
-        .collection('robots')
+        .collection('robotsInfo')
         .updateOne({ nickname }, { $inc: { likes: 1 } });
 
       const updatedRobots = await db
-        .collection('robots')
+        .collection('robotsInfo')
         .find()
         .sort({ _id: -1 })
         .toArray();
@@ -143,7 +143,7 @@ app.post('/my-favourites/:nickname/likes', async (req, res) => {
 });
 
 // local MongoDB - PUT (edit 1 robot)
-app.put('/my-favourites/:nickname/edit', async (req, res) => {
+app.put('/robots/:nickname/edit', async (req, res) => {
   const paramsnickname = trimAndLowerCaseFn(req.params.nickname);
   const { nickname, email, coke, joke, countries, durians, likes } = req.body;
   const robot = {
@@ -163,11 +163,11 @@ app.put('/my-favourites/:nickname/edit', async (req, res) => {
 
   connectToMongoDB(async (db) => {
     const dbNickname = await db
-      .collection('robots')
+      .collection('robotsInfo')
       .findOne({ nickname: paramsnickname });
 
     if (dbNickname !== null) {
-      await db.collection('robots').updateOne(
+      await db.collection('robotsInfo').updateOne(
         { nickname: paramsnickname },
         {
           $set: {
@@ -193,16 +193,23 @@ app.put('/my-favourites/:nickname/edit', async (req, res) => {
 });
 
 // local MongoDB - DELETE
-app.delete('/my-favourites/:nickname/delete', async (req, res) => {
+app.delete('/robots/:nickname/delete', async (req, res) => {
   const nickname = trimAndLowerCaseFn(req.params.nickname);
   connectToMongoDB(async (db) => {
-    const nicknameExists = await db.collection('robots').findOne({ nickname });
+    const nicknameExists = await db
+      .collection('robotsInfo')
+      .findOne({ nickname });
 
     if (nicknameExists !== null) {
-      await db.collection('robots').deleteOne({ nickname });
+      await db.collection('robotsInfo').deleteOne({ nickname });
 
+      const updatedRobots = await db
+        .collection('robotsInfo')
+        .find()
+        .sort({ _id: -1 })
+        .toArray();
       res.status(200).type('application/json');
-      res.send('Robot is deleted ❎ SUCCESSFULLY!');
+      res.send(updatedRobots);
     } else {
       res.send("Nickname doesn't exist 🤷‍♂️");
     }
