@@ -1,42 +1,34 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Button, Container, Form } from 'react-bootstrap';
+import { useInput } from '../../customHooks/useInput';
 
 const SimpleInput = () => {
-  const [nickname, setNickname] = useState('');
-  const [nicknameIsTouched, setNicknameIsTouched] = useState(false);
-
-  const trimmedNickname = nickname.trim();
-  const nicknameIsNotEmpty = trimmedNickname !== '';
-  const nicknameLengthBelow12 = trimmedNickname.length <= 12;
-  const invalidNickname = !nicknameIsNotEmpty && nicknameIsTouched;
+  // hasError: nameInputHasError <-- this is giving an alias; renaming hasError
+  const {
+    value: enteredNickname,
+    isValid: enteredNicknameIsValid,
+    hasError: nameInputHasError,
+    onValueChangeHandler: nameChangeHandler,
+    onValueBlurHandler: nameBlurHandler,
+    resetForm,
+  } = useInput((value) => value.trim() !== '');
+  const nicknameLengthBelow12 = enteredNickname.length <= 12;
 
   let formIsValid = false;
-  if (nicknameIsNotEmpty && nicknameLengthBelow12) {
+
+  if (enteredNickname && nicknameLengthBelow12) {
     formIsValid = true;
   }
 
-  const onInputChangeHandler = (
-    event: React.ChangeEvent<HTMLInputElement>
-  ): void => {
-    setNickname(event.target.value);
-  };
-
-  const onInputBlurHandler = () => {
-    setNicknameIsTouched(true);
-  };
-
   const onSubmitHandler = (event: React.FormEvent<HTMLFormElement>): void => {
     event.preventDefault();
-    setNicknameIsTouched(true);
 
-    if (!nicknameIsNotEmpty || !nicknameLengthBelow12) {
+    if (!enteredNicknameIsValid || !nicknameLengthBelow12) {
       return;
     }
     // send to browser
-    console.log({ nickname });
-
-    setNickname('');
-    setNicknameIsTouched(false);
+    console.log({ nickname: enteredNickname });
+    resetForm();
   };
 
   return (
@@ -47,11 +39,11 @@ const SimpleInput = () => {
           <Form.Control
             type='text'
             placeholder='e.g robocop'
-            onChange={onInputChangeHandler}
-            onBlur={onInputBlurHandler}
-            value={nickname}
+            onChange={nameChangeHandler}
+            onBlur={nameBlurHandler}
+            value={enteredNickname}
           />
-          {invalidNickname && (
+          {nameInputHasError && (
             <Form.Text className='text-muted'>
               Please enter a nickname
             </Form.Text>
@@ -62,54 +54,10 @@ const SimpleInput = () => {
             </Form.Text>
           )}
         </Form.Group>
-        <Form.Group>
-          <Form.Label>Your email</Form.Label>
-          <Form.Control
-            type='email'
-            placeholder='e.g robocop123@gmail.com'
-            onChange={onInputChangeHandler}
-            onBlur={onInputBlurHandler}
-            value={nickname}
-          />
-          {invalidNickname && (
-            <Form.Text className='text-muted'>
-              Please enter a nickname
-            </Form.Text>
-          )}
-          {!nicknameLengthBelow12 && (
-            <Form.Text className='text-muted'>
-              Nickname should be maximum 12 characters
-            </Form.Text>
-          )}
-        </Form.Group>
-
         <Button variant='warning' type='submit' disabled={!formIsValid}>
           Submit
         </Button>
       </Form>
-      {/* {} */}
-      {/* <form onSubmit={onSubmitHandler}>
-        <label htmlFor='nickname'>Nickname</label>
-        <input
-          type='text'
-          id='nickname'
-          placeholder='nickname'
-          onChange={onInputChangeHandler}
-          onBlur={onInputBlurHandler}
-          value={nickname}
-        />
-        {invalidNickname && (
-          <p style={{ color: 'red' }}>emptyStringError</p>
-        )}
-        {invalidNicknameLength && (
-            <Form.Text className='text-muted'>
-              Nickname should be maximum 12 characters
-            </Form.Text>
-          )}
-        <Button variant='warning' type='submit'>
-          Submit
-        </Button>
-      </form> */}
     </Container>
   );
 };
