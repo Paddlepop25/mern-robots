@@ -62,7 +62,7 @@ const RobotDetails: React.FC = () => {
                   💌 Email : <code>{robot.email}</code>
                 </p>
                 <p>
-                  💥 Favourite color : <code>{robot['favourite-color']}</code>
+                  🌈 Favourite color : <code>{robot['favourite-color']}</code>
                 </p>
                 <p>
                   📺 Favourite series :{' '}
@@ -73,11 +73,10 @@ const RobotDetails: React.FC = () => {
                   <code>SGD&#36;{robot.coke}0</code>
                 </p>
                 <p>
-                  🤣 Tell me a joke : <code>{robot.joke}</code>
+                  🤣 Joke : <code>{robot.joke}</code>
                 </p>
                 <p>
-                  🇱🇰 How many countries have you visited :{' '}
-                  <code>{robot.countries}</code>
+                  🇱🇰 Countries visited : <code>{robot.countries}</code>
                 </p>
                 <p>
                   💚 Durian smells good :{' '}

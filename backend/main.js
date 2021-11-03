@@ -88,21 +88,25 @@ app.get('/robots/:nickname', async (req, res) => {
 app.post('/robots/newrobot', async (req, res) => {
   console.log('REQ BODY >>>>>> ', req.body);
   // add validation e.g nickname not more than x character
-  const { nickname, email, coke, joke, countries, durians, likes } = req.body;
-  const robot = {
+  const { nickname, email, robotNumber, coke, joke, countries, durians, likes } =
+    req.body;
+  const robotInfo = {
+    timestamp = new Date(),
+    robotNumber,
     nickname,
     email,
     coke,
     joke,
     'favourite-color': req.body['favourite-color'],
-    'favourite-series1': req.body['favourite-series1'],
-    'favourite-series2': req.body['favourite-series2'],
-    'favourite-series3': req.body['favourite-series3'],
+    'favourite-series': [req.body['favourite-series1'], req.body['favourite-series2'], req.body['favourite-series3']],
+    // 'favourite-series1': req.body['favourite-series1'],
+    // 'favourite-series2': req.body['favourite-series2'],
+    // 'favourite-series3': req.body['favourite-series3'],
     countries,
     durians,
     likes,
   };
-  const newRobot = mkMyFavourites(robot);
+  const newRobot = mkMyFavourites(robotInfo);
 
   connectToMongoDB(async (db) => {
     const dbNickname = await db
@@ -147,21 +151,25 @@ app.post('/robots/:nickname/likes', async (req, res) => {
 // local MongoDB - PUT (edit 1 robot)
 app.put('/robots/:nickname/edit', async (req, res) => {
   const paramsnickname = trimAndLowerCaseFn(req.params.nickname);
-  const { nickname, email, coke, joke, countries, durians, likes } = req.body;
-  const robot = {
+  const { nickname, email, robotNumber, coke, joke, countries, durians, likes } =
+    req.body;
+  const robotInfo = {
+    timestamp = new Date(),
+    robotNumber,
     nickname,
     email,
     coke,
     joke,
     'favourite-color': req.body['favourite-color'],
-    'favourite-series1': req.body['favourite-series1'],
-    'favourite-series2': req.body['favourite-series2'],
-    'favourite-series3': req.body['favourite-series3'],
+    'favourite-series': [req.body['favourite-series1'], req.body['favourite-series2'], req.body['favourite-series3']],
+    // 'favourite-series1': req.body['favourite-series1'],
+    // 'favourite-series2': req.body['favourite-series2'],
+    // 'favourite-series3': req.body['favourite-series3'],
     countries,
     durians,
     likes,
   };
-  const newRobot = mkMyFavourites(robot);
+  const newRobot = mkMyFavourites(robotInfo);
 
   connectToMongoDB(async (db) => {
     const dbNickname = await db
