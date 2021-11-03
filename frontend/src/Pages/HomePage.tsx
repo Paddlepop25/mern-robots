@@ -48,7 +48,7 @@ const HomePage: React.FC = () => {
       <CodeStyled>/ˈrəʊbɒt adɪdʒ/</CodeStyled>
       <ParagraphStyled>
         A proverb or short statement expressing a general truth, applicable to
-        all robotos 🤖
+        all robots 🤖
       </ParagraphStyled>
       <br />
 

@@ -24,7 +24,7 @@ export const ListStyled = styled.li`
 export const LinkStyled = styled.span`
   a {
     text-decoration: none;
-    padding: 1.2rem 2rem;
+    padding: 1.2rem 1.6rem;
     font-weight: bold;
     color: #333;
   }

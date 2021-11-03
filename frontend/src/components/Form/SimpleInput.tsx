@@ -62,6 +62,27 @@ const SimpleInput = () => {
             </Form.Text>
           )}
         </Form.Group>
+        <Form.Group>
+          <Form.Label>Your email</Form.Label>
+          <Form.Control
+            type='email'
+            placeholder='e.g robocop123@gmail.com'
+            onChange={onInputChangeHandler}
+            onBlur={onInputBlurHandler}
+            value={nickname}
+          />
+          {invalidNickname && (
+            <Form.Text className='text-muted'>
+              Please enter a nickname
+            </Form.Text>
+          )}
+          {!nicknameLengthBelow12 && (
+            <Form.Text className='text-muted'>
+              Nickname should be maximum 12 characters
+            </Form.Text>
+          )}
+        </Form.Group>
+
         <Button variant='warning' type='submit' disabled={!formIsValid}>
           Submit
         </Button>
