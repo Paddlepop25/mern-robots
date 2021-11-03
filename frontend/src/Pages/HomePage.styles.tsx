@@ -8,9 +8,17 @@ export const HomePageStyled = styled.div`
   padding: 3rem;
   background: #ffcce6;
 
-  code {
-    font-size: 1.5rem;
+  h3 {
+    font-weight: bold;
   }
+`;
+
+export const CodeStyled = styled.code`
+  font-size: 1.5rem;
+`;
+
+export const ParagraphStyled = styled.p`
+  margin-top: 0.5rem;
 `;
 
 export const AdageAnswerStyled = styled.h5`

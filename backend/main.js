@@ -86,6 +86,8 @@ app.get('/robots/:nickname', async (req, res) => {
 
 // local MongoDB - POST (insert ONE document)
 app.post('/robots/newrobot', async (req, res) => {
+  console.log('REQ BODY >>>>>> ', req.body);
+  // add validation e.g nickname not more than x character
   const { nickname, email, coke, joke, countries, durians, likes } = req.body;
   const robot = {
     nickname,

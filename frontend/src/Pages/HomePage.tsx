@@ -3,7 +3,9 @@ import { Button } from 'react-bootstrap';
 import {
   AdageAnswerStyled,
   AdageQuoteStyled,
+  CodeStyled,
   HomePageStyled,
+  ParagraphStyled,
 } from './HomePage.styles';
 
 const HomePage: React.FC = () => {
@@ -42,8 +44,12 @@ const HomePage: React.FC = () => {
   }, []);
   return (
     <HomePageStyled>
-      <code>/ˈadɪdʒ/</code>
-      <p>a proverb or short statement expressing a general truth.</p>
+      <h3>Robot Adage</h3>
+      <CodeStyled>/ˈrəʊbɒt adɪdʒ/</CodeStyled>
+      <ParagraphStyled>
+        A proverb or short statement expressing a general truth, applicable to
+        all robotos 🤖
+      </ParagraphStyled>
       <br />
 
       <Button
@@ -51,7 +57,7 @@ const HomePage: React.FC = () => {
         className='capitalize mx-1 mb-2'
         onClick={getRandomAdage}
       >
-        Click for more
+        Click for more 👇
       </Button>
       <br />
       <br />
