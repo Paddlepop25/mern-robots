@@ -1,10 +1,9 @@
 import React, { useState } from 'react';
 
-interface ValidateValueFunction {
-  value: (input: string) => any;
-}
+type ValidateValueFunction = (input: string) => boolean;
 
-export const useInput = (validateValue: (arg0: any) => any) => {
+// export const useInput = (validateValue: (arg0: any) => any) => {
+export const useInput = (validateValue: ValidateValueFunction) => {
   const [enteredValue, setEnteredValue] = useState('');
   const [isTouched, setIsTouched] = useState(false);
 

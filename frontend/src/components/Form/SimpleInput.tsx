@@ -1,14 +1,25 @@
-import React from 'react';
-import {
-  Button,
-  Container,
-  Form,
-  Dropdown,
-  DropdownButton,
-} from 'react-bootstrap';
+import React, { useState } from 'react';
+import { Button, Container, Form } from 'react-bootstrap';
 import { useInput } from '../../customHooks/useInput';
+import { tvSeries } from './tvSeries';
 
 const SimpleInput = () => {
+  const [color, setColor] = useState('Colors of the Rainbow');
+  const [colorIsTouched, setColorIsTouched] = useState(false);
+  const colorIsValid = color !== 'Colors of the Rainbow';
+  const colorHasError = !colorIsValid && colorIsTouched;
+
+  const onColorChangeHandler = (
+    event: React.ChangeEvent<HTMLSelectElement>
+  ) => {
+    setColor(event.target.value);
+    setColorIsTouched(true);
+  };
+
+  const onColorBlurHandler = () => {
+    setColorIsTouched(true);
+  };
+
   // hasError: nicknameInputHasError <-- this is giving an alias; renaming hasError
   const {
     value: enteredNickname,
@@ -27,7 +38,9 @@ const SimpleInput = () => {
     onValueChangeHandler: robotNumberChangeHandler,
     onValueBlurHandler: robotNumberBlurHandler,
     reset: resetRobotNumberInput,
-  } = useInput((value) => value >= 1 && value <= 1000);
+  } = useInput(
+    (value) => +value >= 1 && +value <= 1000 && !value.includes('.')
+  );
 
   const {
     value: enteredEmail,
@@ -58,9 +71,15 @@ const SimpleInput = () => {
   } = useInput((value) => value.trim() !== '');
   const jokeNotTooLong = enteredJoke.length <= 100;
 
-  const colorChangeHandler = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    console.log(e.target.value);
-  };
+  const {
+    value: enteredCountries,
+    isValid: enteredCountriesIsValid,
+    hasError: countriesInputHasError,
+    onValueChangeHandler: countriesChangeHandler,
+    onValueBlurHandler: countriesBlurHandler,
+    reset: resetCountriesInput,
+  } = useInput((value) => +value >= 1 && +value <= 195 && !value.includes('.'));
+
   // check validity for entire entire form
   let formIsValid = false;
   if (
@@ -69,7 +88,9 @@ const SimpleInput = () => {
     enteredEmail &&
     enteredRobotNumber &&
     enteredJoke &&
-    jokeNotTooLong
+    jokeNotTooLong &&
+    colorIsValid &&
+    enteredCountries
   ) {
     formIsValid = true;
   }
@@ -83,7 +104,9 @@ const SimpleInput = () => {
       !enteredEmailIsValid ||
       !enteredRobotNumberIsValid ||
       !enteredCokeIsValid ||
-      !enteredJokeIsValid
+      !enteredJokeIsValid ||
+      colorHasError ||
+      !enteredCountriesIsValid
     ) {
       return;
     }
@@ -94,6 +117,8 @@ const SimpleInput = () => {
       email: enteredEmail,
       coke: enteredCoke,
       joke: enteredJoke,
+      'favourite-color': color,
+      countries: enteredCountries,
     });
 
     resetNicknameInput();
@@ -101,10 +126,13 @@ const SimpleInput = () => {
     resetRobotNumberInput();
     resetCokeInput();
     resetJokeInput();
+    setColor(''); // how to reset to original?
+    resetCountriesInput();
   };
 
   return (
     <Container>
+      <h2 className='mb-3'>Create A Robot</h2>
       <Form onSubmit={onSubmitHandler}>
         <Form.Group className='mb-3'>
           <Form.Label>Give a robot nickname 🤖</Form.Label>
@@ -140,7 +168,7 @@ const SimpleInput = () => {
           />
           {robotNumberInputHasError && (
             <Form.Text className='text-muted'>
-              Please enter a valid number
+              Please enter a valid whole number below 1001
             </Form.Text>
           )}
         </Form.Group>
@@ -198,20 +226,18 @@ const SimpleInput = () => {
             <Form.Text className='text-muted'>Make me laugh</Form.Text>
           )}
           {!jokeNotTooLong && (
-            <Form.Text className='text-muted'>Shorter joke please</Form.Text>
+            <Form.Text className='text-muted'>
+              Shorter joke below 100 characters please
+            </Form.Text>
           )}
         </Form.Group>
         <Form.Group className='mb-3'>
-          <Form.Label>Pick your favourite color</Form.Label>
-          {/* <Form.Control
-            type='text'
-            placeholder='robocop'
-            onChange={nicknameChangeHandler}
-            onBlur={nicknameBlurHandler}
-            value={enteredNickname}
-          /> */}
-          <Form.Select onChange={colorChangeHandler}>
-            <option>Colors 🌈</option>
+          <Form.Label>Pick your favourite color 🌈</Form.Label>
+          <Form.Select
+            onChange={onColorChangeHandler}
+            onBlur={onColorBlurHandler}
+          >
+            <option>Colors of the Rainbow</option>
             <option value='red'>Red</option>
             <option value='orange'>Orange</option>
             <option value='yellow'>Yellow</option>
@@ -220,6 +246,83 @@ const SimpleInput = () => {
             <option value='indigo'>Indigo</option>
             <option value='violet'>Violet</option>
           </Form.Select>
+          {colorHasError && (
+            <Form.Text className='text-muted'>Choose a color</Form.Text>
+          )}
+        </Form.Group>
+        {/* <Form.Group className='mb-3'> */}
+        {/* <Form.Label>Pick some favourite TV series 📺</Form.Label> */}
+        {/* <ul>
+            {tvSeries.map(({ series }, index) => {
+              return (
+                <li key={index}>
+                  <div className='toppings-list-item'>
+                    <div className='left-section'>
+                      <input
+                        type='checkbox'
+                        id={`custom-checkbox-${index}`}
+                        name={series}
+                        value={series}
+                        checked={tvSeriesChecked[index]}
+                        onChange={() => onTvSeriesChange(series)}
+                      />
+                      <label htmlFor={`custom-checkbox-${index}`}>
+                        {series}
+                      </label>
+                    </div>
+                  </div>
+                </li>
+              );
+            })}
+          </ul> */}
+
+        {/* {['checkbox'].map((type: any) => (
+            <div key={`inline-${type}`} className='mb-3'>
+              <Form.Check
+                inline
+                label='Party pooper'
+                value='party pooper'
+                name='group1'
+                type={type}
+                id={`inline-${type}-1`}
+                checked
+              />
+              <Form.Check
+                inline
+                label='2'
+                value='2'
+                name='group1'
+                type={type}
+                id={`inline-${type}-2`}
+              />
+              <Form.Check
+                inline
+                label='3'
+                value='3'
+                name='group1'
+                type={type}
+                id={`inline-${type}-2`}
+              />
+            </div>
+          ))}
+        </Form.Group> */}
+        <Form.Group className='mb-3'>
+          <Form.Label>How many countries have you visited?</Form.Label>
+          <Form.Control
+            type='number'
+            placeholder='1'
+            onChange={countriesChangeHandler}
+            onBlur={countriesBlurHandler}
+            value={enteredCountries}
+            min='1'
+            max='195'
+            step='1'
+          />
+          {countriesInputHasError && (
+            <Form.Text className='text-muted'>
+              There are 195 countries in the world
+            </Form.Text>
+          )}
         </Form.Group>
         <Button variant='warning' type='submit' disabled={!formIsValid}>
           Submit
