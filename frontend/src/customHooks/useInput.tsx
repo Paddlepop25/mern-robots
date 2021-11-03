@@ -4,7 +4,7 @@ interface ValidateValueFunction {
   value: (input: string) => any;
 }
 
-export const useInput = (validateValue: (arg0: string) => any) => {
+export const useInput = (validateValue: (arg0: any) => any) => {
   const [enteredValue, setEnteredValue] = useState('');
   const [isTouched, setIsTouched] = useState(false);
 
@@ -21,7 +21,7 @@ export const useInput = (validateValue: (arg0: string) => any) => {
     setIsTouched(true);
   };
 
-  const resetForm = () => {
+  const reset = () => {
     setEnteredValue('');
     setIsTouched(false);
   };
@@ -32,6 +32,6 @@ export const useInput = (validateValue: (arg0: string) => any) => {
     hasError,
     onValueChangeHandler,
     onValueBlurHandler,
-    resetForm,
+    reset,
   };
 };
