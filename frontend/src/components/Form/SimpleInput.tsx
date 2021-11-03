@@ -1,9 +1,14 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { Button, Container, Form } from 'react-bootstrap';
 import { useInput } from '../../customHooks/useInput';
+import { RadioInput } from './RadioInput';
 import { tvSeries } from './tvSeries';
 
 const SimpleInput = () => {
+  const [durian, setDurian] = React.useState('');
+  const durianIsValid = durian === 'yes' || durian === 'no';
+
+  // const selectColorInputRef = useRef<HTMLButtonElement>(null);
   const [color, setColor] = useState('Colors of the Rainbow');
   const [colorIsTouched, setColorIsTouched] = useState(false);
   const colorIsValid = color !== 'Colors of the Rainbow';
@@ -90,14 +95,14 @@ const SimpleInput = () => {
     enteredJoke &&
     jokeNotTooLong &&
     colorIsValid &&
-    enteredCountries
+    enteredCountries &&
+    durianIsValid
   ) {
     formIsValid = true;
   }
 
   const onSubmitHandler = (event: React.FormEvent<HTMLFormElement>): void => {
     event.preventDefault();
-
     if (
       !enteredNicknameIsValid ||
       !nicknameLengthBelow12 ||
@@ -119,6 +124,7 @@ const SimpleInput = () => {
       joke: enteredJoke,
       'favourite-color': color,
       countries: enteredCountries,
+      durian,
     });
 
     resetNicknameInput();
@@ -127,13 +133,15 @@ const SimpleInput = () => {
     resetCokeInput();
     resetJokeInput();
     setColor(''); // how to reset to original?
+    // selectColorInputRef.current.select.clearValue();
     resetCountriesInput();
+    setDurian('');
   };
 
   return (
     <Container>
-      <h2 className='mb-3'>Create A Robot</h2>
       <Form onSubmit={onSubmitHandler}>
+        <h2 className='mb-3'>Create A Robot</h2>
         <Form.Group className='mb-3'>
           <Form.Label>Give a robot nickname 🤖</Form.Label>
           <Form.Control
@@ -236,6 +244,7 @@ const SimpleInput = () => {
           <Form.Select
             onChange={onColorChangeHandler}
             onBlur={onColorBlurHandler}
+            // ref={selectColorInputRef}
           >
             <option>Colors of the Rainbow</option>
             <option value='red'>Red</option>
@@ -306,8 +315,9 @@ const SimpleInput = () => {
             </div>
           ))}
         </Form.Group> */}
+
         <Form.Group className='mb-3'>
-          <Form.Label>How many countries have you visited?</Form.Label>
+          <Form.Label>How many countries have you visited? 🇱🇰</Form.Label>
           <Form.Control
             type='number'
             placeholder='1'
@@ -323,6 +333,24 @@ const SimpleInput = () => {
               There are 195 countries in the world
             </Form.Text>
           )}
+        </Form.Group>
+        <Form.Group className='mb-3'>
+          <Form.Label>Do you agree durians smell good? 💚</Form.Label>
+          <br />
+          <RadioInput
+            inline
+            label='Yes'
+            value='yes'
+            checked={durian}
+            setter={setDurian}
+          />
+          <RadioInput
+            inline
+            label='No'
+            value='no'
+            checked={durian}
+            setter={setDurian}
+          />
         </Form.Group>
         <Button variant='warning' type='submit' disabled={!formIsValid}>
           Submit
