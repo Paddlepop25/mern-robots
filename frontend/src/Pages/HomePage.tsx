@@ -5,7 +5,6 @@ import {
   AdageQuoteStyled,
   CodeStyled,
   HomePageStyled,
-  ParagraphStyled,
 } from './HomePage.styles';
 
 const HomePage: React.FC = () => {
@@ -46,15 +45,15 @@ const HomePage: React.FC = () => {
     <HomePageStyled>
       <h3>Robot Adage</h3>
       <CodeStyled>/ˈrəʊbɒt adɪdʒ/</CodeStyled>
-      <ParagraphStyled>
+      <p>
         A proverb or short statement expressing a general truth, applicable to
         all robots 🤖
-      </ParagraphStyled>
+      </p>
       <br />
 
       <Button
         variant='info'
-        className='capitalize mx-1 mb-2'
+        className='capitalize mx-1'
         onClick={getRandomAdage}
       >
         Click for more 👇
