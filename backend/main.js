@@ -36,7 +36,8 @@ const trimAndLowerCaseFn = (input) => {
 const mkMyFavourites = (params) => {
   return {
     timestamp: new Date(),
-    robot: `https://robohash.org/${params.robotNumber}`,
+    robotNumber: params.robotNumber,
+    robotUrl: `https://robohash.org/${params.robotNumber}`,
     nickname: trimAndLowerCaseFn(params.nickname),
     email: trimAndLowerCaseFn(params.email),
     'favourite-color': trimAndLowerCaseFn(params['favourite-color']),
@@ -88,7 +89,8 @@ app.post('/robots/newrobot', async (req, res) => {
     req.body;
   const robotInfo = {
     timestamp: new Date(),
-    robotNumber: `https://robohash.org/${robotNumber}`,
+    robotNumber,
+    robotUrl: `https://robohash.org/${robotNumber}`,
     nickname,
     email,
     coke,

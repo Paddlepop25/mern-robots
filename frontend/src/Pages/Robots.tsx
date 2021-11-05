@@ -13,7 +13,8 @@ export interface RobotType {
   joke: string;
   likes: number;
   nickname: string;
-  robot: string;
+  robotUrl: string;
+  robotNumber: string;
   timestamp: string;
   _id: string;
 }
@@ -47,7 +48,7 @@ const Favourites: React.FC = (): React.ReactElement => {
             robots.map((robot) => (
               <Col xs={12} md={6} lg={3} key={robot._id}>
                 <Card style={{ width: '18rem', background: '#ffcce6' }}>
-                  <Card.Img variant='top' src={robot.robot} />
+                  <Card.Img variant='top' src={robot.robotUrl} />
                   <Card.Body>
                     <Link to={`/robots/${robot.nickname}`}>
                       <Button variant='info' className='capitalize mx-1 mb-2'>

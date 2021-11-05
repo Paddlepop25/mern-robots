@@ -2,8 +2,12 @@ import React, { useEffect, useState } from 'react';
 import { Button, Col, Container, Row } from 'react-bootstrap';
 import { useParams, useHistory } from 'react-router-dom';
 import { RobotType } from '../../Pages/Robots';
+import {
+  capitalizedFirstLetter,
+  capitalizedFirstLetterOfEveryWord,
+} from '../Utils/Utils';
 import { ButtonsStyled, RobotDetailsStyled } from './RobotDetails.styles';
-interface NickNameType {
+export interface NickNameType {
   nickname: string;
 }
 
@@ -28,7 +32,7 @@ const RobotDetails: React.FC = () => {
   };
 
   const onEditHandler = () => {
-    console.log('edit');
+    history.push(`/editform/${robotNickname}`);
   };
 
   const onDeleteHandler = async () => {
@@ -50,19 +54,25 @@ const RobotDetails: React.FC = () => {
             <Row>
               <Col xs={12} md={6} lg={4}>
                 <img
-                  src={robot.robot}
+                  src={robot.robotUrl}
                   alt={`details of robot ${robot.nickname}`}
                 />
               </Col>
               <Col xs={12} md={6} lg={8}>
                 <p className='capitalize mt-3'>
-                  🤖 Nickname : <code>{robot.nickname}</code>
+                  🤖 Nickname :{' '}
+                  <code>
+                    {capitalizedFirstLetterOfEveryWord(robot.nickname)}
+                  </code>
                 </p>
                 <p>
                   💌 Email : <code>{robot.email}</code>
                 </p>
                 <p>
-                  🌈 Favourite color : <code>{robot['favourite-color']}</code>
+                  🌈 Favourite color :{' '}
+                  <code>
+                    {capitalizedFirstLetter(robot['favourite-color'])}
+                  </code>
                 </p>
                 <p>
                   📺 Favourite series :{' '}

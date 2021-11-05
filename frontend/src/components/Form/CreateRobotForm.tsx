@@ -25,13 +25,12 @@ const tvSeriesState: { [key: string]: boolean } = {
 };
 
 const CreateRobotForm: React.FC = () => {
-  const [durians, setDurians] = React.useState('');
+  const [durians, setDurians] = React.useState(true);
   const [color, setColor] = useState('Colors of the Rainbow');
   const [colorIsTouched, setColorIsTouched] = useState(false);
   const [tvSeries, setTvSeries] = useState(tvSeriesState);
   const [tvSeriesError, setTvSeriesError] = useState(false);
 
-  const duriansAreValid = durians === 'yes' || durians === 'no';
   // const selectColorInputRef = useRef<HTMLButtonElement>(null);
   const colorIsValid = color !== 'Colors of the Rainbow';
   const colorHasError = !colorIsValid && colorIsTouched;
@@ -150,8 +149,7 @@ const CreateRobotForm: React.FC = () => {
     jokeNotTooLong &&
     colorIsValid &&
     // tvSeriesMinimumOneChecked &&
-    enteredCountries &&
-    duriansAreValid
+    enteredCountries
   ) {
     formIsValid = true;
   }
@@ -194,7 +192,6 @@ const CreateRobotForm: React.FC = () => {
       }
     }
 
-    const duriansBoolean = durians === 'yes' ? true : false;
     // send to browser
     const newRobot = {
       nickname: enteredNickname,
@@ -205,7 +202,7 @@ const CreateRobotForm: React.FC = () => {
       'favourite-color': color,
       'favourite-series': tvSeriesArray,
       countries: enteredCountries,
-      durians: duriansBoolean,
+      durians,
     };
     // console.clear();
     console.log(newRobot);
@@ -224,7 +221,7 @@ const CreateRobotForm: React.FC = () => {
         'favourite-color': color,
         'favourite-series': tvSeriesArray,
         countries: enteredCountries,
-        durians: duriansBoolean,
+        durians,
       }),
     });
 
@@ -237,7 +234,7 @@ const CreateRobotForm: React.FC = () => {
     // selectColorInputRef.current.select.clearValue();
     onUncheckAllCheckBoxes();
     resetCountriesInput();
-    setDurians('');
+    setDurians(true);
   };
 
   return (
@@ -405,15 +402,15 @@ const CreateRobotForm: React.FC = () => {
             <br />
             {tvSeriesError && (
               <Form.Text className='text-danger'>
-                C'mon, choose at least one tv programme
+                C'mon, choose at least 1 Tv Programme
               </Form.Text>
             )}
           </Form.Group>
           <Form.Group className='mb-4'>
-            <Form.Label>How many countries have you visited? 🇱🇰</Form.Label>
+            <Form.Label>How many countries have you visited?</Form.Label>
             <Form.Control
               type='number'
-              placeholder='🇸🇬  🇧🇳  🇺🇸  🇸🇪  🇮🇳  🇨🇦  🇦🇺'
+              placeholder='🇱🇰  🇸🇬  🇧🇳  🇮🇳  🇻🇳  🇺🇸  🇸🇪 '
               onChange={countriesChangeHandler}
               onBlur={countriesBlurHandler}
               value={enteredCountries}
@@ -433,8 +430,8 @@ const CreateRobotForm: React.FC = () => {
             <Form.Check.Label>
               <RadioInput
                 inline
-                label='Yes'
-                value='yes'
+                label='Yes!'
+                value={true}
                 checked={durians}
                 setter={setDurians}
               />
@@ -442,8 +439,8 @@ const CreateRobotForm: React.FC = () => {
             <Form.Check.Label>
               <RadioInput
                 inline
-                label='No'
-                value='no'
+                label='Eww...'
+                value={false}
                 checked={durians}
                 setter={setDurians}
               />
@@ -453,7 +450,7 @@ const CreateRobotForm: React.FC = () => {
             variant='warning'
             type='submit'
             disabled={!formIsValid}
-            className='mb-5'
+            className='mb-2'
           >
             Create Robot 🤖
           </Button>
