@@ -80,7 +80,7 @@ const RobotDetails: React.FC = () => {
                 </p>
                 <p>
                   💚 Durian smells good :{' '}
-                  <code>{robot.durians ? 'Yes!' : 'No!'}</code>
+                  <code>{robot.durians ? 'Yes!' : 'Eww...'}</code>
                 </p>
                 <p>
                   👍 Likes : <code>{robot.likes}</code>

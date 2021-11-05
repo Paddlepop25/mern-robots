@@ -34,21 +34,17 @@ const trimAndLowerCaseFn = (input) => {
 
 // create body object
 const mkMyFavourites = (params) => {
-  const favSeries = [
-    trimAndLowerCaseFn(params['favourite-series1']),
-    trimAndLowerCaseFn(params['favourite-series2']),
-    trimAndLowerCaseFn(params['favourite-series3']),
-  ];
   return {
     timestamp: new Date(),
+    robot: `https://robohash.org/${params.robotNumber}`,
     nickname: trimAndLowerCaseFn(params.nickname),
     email: trimAndLowerCaseFn(params.email),
     'favourite-color': trimAndLowerCaseFn(params['favourite-color']),
-    'favourite-series': favSeries,
-    coke: Number(params.coke),
-    joke: trimAndLowerCaseFn(params.joke),
-    countries: Number(params.countries),
-    durians: JSON.parse(params.durians),
+    'favourite-series': params['favourite-series'],
+    coke: params.coke,
+    joke: params.joke.trim(),
+    countries: params.countries,
+    durians: params.durians,
     likes: Number(params.likes),
   };
 };
@@ -88,39 +84,41 @@ app.get('/robots/:nickname', async (req, res) => {
 app.post('/robots/newrobot', async (req, res) => {
   console.log('REQ BODY >>>>>> ', req.body);
   // add validation e.g nickname not more than x character
-  const { nickname, email, robotNumber, coke, joke, countries, durians, likes } =
+  const { nickname, email, robotNumber, coke, joke, countries, durians } =
     req.body;
   const robotInfo = {
-    timestamp = new Date(),
-    robotNumber,
+    timestamp: new Date(),
+    robotNumber: `https://robohash.org/${robotNumber}`,
     nickname,
     email,
     coke,
     joke,
     'favourite-color': req.body['favourite-color'],
-    'favourite-series': [req.body['favourite-series1'], req.body['favourite-series2'], req.body['favourite-series3']],
-    // 'favourite-series1': req.body['favourite-series1'],
-    // 'favourite-series2': req.body['favourite-series2'],
-    // 'favourite-series3': req.body['favourite-series3'],
+    'favourite-series': req.body['favourite-series'],
     countries,
     durians,
-    likes,
+    likes: 0,
   };
-  const newRobot = mkMyFavourites(robotInfo);
 
-  connectToMongoDB(async (db) => {
-    const dbNickname = await db
-      .collection('robotsInfo')
-      .findOne({ nickname: trimAndLowerCaseFn(req.body.nickname) });
-    if (dbNickname === null) {
-      const robots = await db.collection('robotsInfo').insertOne(newRobot);
+  try {
+    const newRobot = mkMyFavourites(robotInfo);
+    console.log('>>>> NEW ROBOT >>>> ', newRobot);
+    connectToMongoDB(async (db) => {
+      const dbNickname = await db
+        .collection('robotsInfo')
+        .findOne({ nickname: trimAndLowerCaseFn(req.body.nickname) });
+      if (dbNickname === null) {
+        const robots = await db.collection('robotsInfo').insertOne(newRobot);
 
-      res.status(200).type('application/json');
-      res.send(robots);
-    } else {
-      res.send('Nickname already exist 🤦‍♂️ ');
-    }
-  }, res);
+        res.status(200).type('application/json');
+        res.send(robots);
+      } else {
+        res.send('Nickname already exist 🤦‍♂️ ');
+      }
+    }, res);
+  } catch (error) {
+    console.log('>>>> ERROR >>>> ', error);
+  }
 });
 
 // local MongoDB - POST (increment likes by 1)
@@ -151,20 +149,25 @@ app.post('/robots/:nickname/likes', async (req, res) => {
 // local MongoDB - PUT (edit 1 robot)
 app.put('/robots/:nickname/edit', async (req, res) => {
   const paramsnickname = trimAndLowerCaseFn(req.params.nickname);
-  const { nickname, email, robotNumber, coke, joke, countries, durians, likes } =
-    req.body;
+  const {
+    nickname,
+    email,
+    robotNumber,
+    coke,
+    joke,
+    countries,
+    durians,
+    likes,
+  } = req.body;
   const robotInfo = {
-    timestamp = new Date(),
+    timestamp: new Date(),
     robotNumber,
     nickname,
     email,
     coke,
     joke,
     'favourite-color': req.body['favourite-color'],
-    'favourite-series': [req.body['favourite-series1'], req.body['favourite-series2'], req.body['favourite-series3']],
-    // 'favourite-series1': req.body['favourite-series1'],
-    // 'favourite-series2': req.body['favourite-series2'],
-    // 'favourite-series3': req.body['favourite-series3'],
+    'favourite-series': req.body['favourite-series'],
     countries,
     durians,
     likes,

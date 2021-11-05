@@ -1,20 +1,42 @@
 import React, { useState } from 'react';
 import { Button, Container, Form } from 'react-bootstrap';
 import { useInput } from '../../customHooks/useInput';
-import { HomePageStyled } from '../../Pages/HomePage.styles';
+import { FormStyled } from './CreateRobotForm.styles';
 import { RadioInput } from './RadioInput';
-import TestCheckBox from './TestCheckBox';
+import { TVSERIES } from './TvSeries.data';
+
+// stackoverflow.com/questions/57667198/typescript-error-type-string-cant-be-used-to-index-type-x/57667278#57667278
+// !Typescript Indexable Type
+const tvSeriesState: { [key: string]: boolean } = {
+  // !Typescript Utility Type
+  // const tvSeriesIsChecked: Record<string, boolean> = {
+  FullHouse: false,
+  Moana: false,
+  Superman: false,
+  Wolfgang: false,
+  'Zack & Cody': false,
+  'Squid Game': false,
+  Scream: false,
+  '3rd Rock From the Sun': false,
+  Batman: false,
+  'Silicon Valley': false,
+  Cars: false,
+  Lucifer: false,
+};
 
 const CreateRobotForm: React.FC = () => {
-  const [durian, setDurian] = React.useState('');
-  const durianIsValid = durian === 'yes' || durian === 'no';
-
-  // const selectColorInputRef = useRef<HTMLButtonElement>(null);
+  const [durians, setDurians] = React.useState('');
   const [color, setColor] = useState('Colors of the Rainbow');
   const [colorIsTouched, setColorIsTouched] = useState(false);
+  const [tvSeries, setTvSeries] = useState(tvSeriesState);
+  const [tvSeriesError, setTvSeriesError] = useState(false);
+
+  const duriansAreValid = durians === 'yes' || durians === 'no';
+  // const selectColorInputRef = useRef<HTMLButtonElement>(null);
   const colorIsValid = color !== 'Colors of the Rainbow';
   const colorHasError = !colorIsValid && colorIsTouched;
 
+  // select color
   const onColorChangeHandler = (
     event: React.ChangeEvent<HTMLSelectElement>
   ) => {
@@ -26,6 +48,37 @@ const CreateRobotForm: React.FC = () => {
     setColorIsTouched(true);
   };
 
+  // select tv series
+  const onCheckBoxChange = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ): void => {
+    const series = event.target.name;
+    setTvSeries((prevState) => ({
+      ...prevState,
+      [series]: !prevState[series],
+    }));
+    setTvSeriesError(false);
+  };
+
+  const selectAllCheckBoxes = (checked: boolean): void => {
+    Object.keys(tvSeriesState).forEach((series) => {
+      setTvSeries((prevState) => ({
+        ...prevState,
+        [series]: checked,
+      }));
+    });
+  };
+  const onCheckAllCheckBoxes = () => {
+    selectAllCheckBoxes(true);
+    setTvSeriesError(false);
+  };
+
+  const onUncheckAllCheckBoxes = () => selectAllCheckBoxes(false);
+  const checkedTvSeries = Object.fromEntries(
+    Object.entries(tvSeries).filter(([series, checked]) => checked === true)
+  );
+  const tvSeriesMinimumOneChecked = Object.keys(checkedTvSeries).length > 0;
+
   // hasError: nicknameInputHasError <-- this is giving an alias; renaming hasError
   const {
     value: enteredNickname,
@@ -35,7 +88,7 @@ const CreateRobotForm: React.FC = () => {
     onValueBlurHandler: nicknameBlurHandler,
     reset: resetNicknameInput,
   } = useInput((value) => value.trim() !== '');
-  const nicknameLengthBelow12 = enteredNickname.length <= 12;
+  const nicknameLengthBelow10 = enteredNickname.length <= 10;
 
   const {
     value: enteredRobotNumber,
@@ -75,7 +128,7 @@ const CreateRobotForm: React.FC = () => {
     onValueBlurHandler: jokeBlurHandler,
     reset: resetJokeInput,
   } = useInput((value) => value.trim() !== '');
-  const jokeNotTooLong = enteredJoke.length <= 100;
+  const jokeNotTooLong = enteredJoke.length <= 200;
 
   const {
     value: enteredCountries,
@@ -90,43 +143,89 @@ const CreateRobotForm: React.FC = () => {
   let formIsValid = false;
   if (
     enteredNickname &&
-    nicknameLengthBelow12 &&
+    nicknameLengthBelow10 &&
     enteredEmail &&
     enteredRobotNumber &&
     enteredJoke &&
     jokeNotTooLong &&
     colorIsValid &&
+    // tvSeriesMinimumOneChecked &&
     enteredCountries &&
-    durianIsValid
+    duriansAreValid
   ) {
     formIsValid = true;
   }
 
   const onSubmitHandler = (event: React.FormEvent<HTMLFormElement>): void => {
     event.preventDefault();
+
+    let tvSeriesHasError = false;
+    // IIFE - immediately invoked function expression
+    (function () {
+      if (!tvSeriesMinimumOneChecked) {
+        setTvSeriesError(true);
+        tvSeriesHasError = true;
+      }
+    })();
+
     if (
       !enteredNicknameIsValid ||
-      !nicknameLengthBelow12 ||
+      !nicknameLengthBelow10 ||
       !enteredEmailIsValid ||
       !enteredRobotNumberIsValid ||
       !enteredCokeIsValid ||
       !enteredJokeIsValid ||
       colorHasError ||
+      tvSeriesHasError ||
       !enteredCountriesIsValid
     ) {
       return;
     }
+
+    let tvSeriesArray = [];
+    // https://stackoverflow.com/questions/57667198/typescript-error-type-string-cant-be-used-to-index-type-x/57667278#57667278
+    // !using Typescript Indexable types
+    for (let key in tvSeries) {
+      // !using Typescript Utility type
+      //   // console.log(`${key}: ${tvSeriesIsChecked[key]}`);
+      // for (const key of Object.keys(tvSeries)) {
+      if (tvSeries[key] === true) {
+        tvSeriesArray.push(key);
+      }
+    }
+
+    const duriansBoolean = durians === 'yes' ? true : false;
     // send to browser
-    console.clear();
-    console.log({
+    const newRobot = {
       nickname: enteredNickname,
       robotNumber: enteredRobotNumber,
       email: enteredEmail,
       coke: enteredCoke,
       joke: enteredJoke,
       'favourite-color': color,
+      'favourite-series': tvSeriesArray,
       countries: enteredCountries,
-      durian,
+      durians: duriansBoolean,
+    };
+    // console.clear();
+    console.log(newRobot);
+
+    fetch('/robots/newrobot', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        nickname: enteredNickname,
+        robotNumber: enteredRobotNumber,
+        email: enteredEmail,
+        coke: enteredCoke,
+        joke: enteredJoke,
+        'favourite-color': color,
+        'favourite-series': tvSeriesArray,
+        countries: enteredCountries,
+        durians: duriansBoolean,
+      }),
     });
 
     resetNicknameInput();
@@ -136,18 +235,17 @@ const CreateRobotForm: React.FC = () => {
     resetJokeInput();
     setColor(''); // how to reset to original?
     // selectColorInputRef.current.select.clearValue();
+    onUncheckAllCheckBoxes();
     resetCountriesInput();
-    setDurian('');
+    setDurians('');
   };
 
   return (
     <Container>
-      <TestCheckBox />
-
-      <HomePageStyled>
+      <FormStyled>
         <Form onSubmit={onSubmitHandler}>
           <h3>Create A Robot</h3>
-          <Form.Group className='mb-3'>
+          <Form.Group className='mb-4'>
             <Form.Label>Give a robot nickname 🤖</Form.Label>
             <Form.Control
               type='text'
@@ -157,17 +255,17 @@ const CreateRobotForm: React.FC = () => {
               value={enteredNickname}
             />
             {nicknameInputHasError && (
-              <Form.Text className='text-muted'>
+              <Form.Text className='text-danger'>
                 Please enter a nickname
               </Form.Text>
             )}
-            {!nicknameLengthBelow12 && (
-              <Form.Text className='text-muted'>
-                Nickname should be maximum 12 characters
+            {!nicknameLengthBelow10 && (
+              <Form.Text className='text-danger'>
+                Nickname should be maximum 10 characters
               </Form.Text>
             )}
           </Form.Group>
-          <Form.Group className='mb-3'>
+          <Form.Group className='mb-4'>
             <Form.Label>Choose a number between 1 and 1000 💯</Form.Label>
             <Form.Control
               type='number'
@@ -180,12 +278,12 @@ const CreateRobotForm: React.FC = () => {
               step='1'
             />
             {robotNumberInputHasError && (
-              <Form.Text className='text-muted'>
+              <Form.Text className='text-danger'>
                 Please enter a valid whole number below 1001
               </Form.Text>
             )}
           </Form.Group>
-          <Form.Group className='mb-3'>
+          <Form.Group className='mb-4'>
             <Form.Label>Your email 💌</Form.Label>
             <Form.Control
               type='email'
@@ -195,14 +293,14 @@ const CreateRobotForm: React.FC = () => {
               value={enteredEmail}
             />
             {emailInputHasError && (
-              <Form.Text className='text-muted'>
+              <Form.Text className='text-danger'>
                 Please enter a valid email
               </Form.Text>
             )}
           </Form.Group>
-          <Form.Group className='mb-3'>
+          <Form.Group className='mb-4'>
             <Form.Label>
-              How much is a can of Coke 🥫 in your country? (convert to SGD$)
+              How much is a can of Coke 🥫 in your country?
             </Form.Label>
             <Form.Control
               type='number'
@@ -214,21 +312,25 @@ const CreateRobotForm: React.FC = () => {
               max='30'
               step='0.1'
             />
+            {/* <Form.Range min='0.1' max='10' step='0.1' /> */}
+            {/* <p>SGD$ value</p> */}
             {cokeInputHasError && (
-              <Form.Text className='text-muted'>
+              <Form.Text className='text-danger'>
                 Please enter a valid number
               </Form.Text>
             )}
             {cokeIsOverPriced && (
-              <Form.Text className='text-muted'>
+              <Form.Text className='text-danger'>
                 <br />
                 🥴 Does it cost THAT much?
               </Form.Text>
             )}
           </Form.Group>
-          <Form.Group className='mb-3'>
+          <Form.Group className='mb-4'>
             <Form.Label>Tell me a joke! 🤣</Form.Label>
             <Form.Control
+              as='textarea'
+              rows={3}
               type='text'
               placeholder='Knock knock!'
               onChange={jokeChangeHandler}
@@ -236,15 +338,15 @@ const CreateRobotForm: React.FC = () => {
               value={enteredJoke}
             />
             {jokeInputHasError && (
-              <Form.Text className='text-muted'>Make me laugh</Form.Text>
+              <Form.Text className='text-danger'>Make me laugh</Form.Text>
             )}
             {!jokeNotTooLong && (
-              <Form.Text className='text-muted'>
-                Shorter joke below 100 characters please
+              <Form.Text className='text-danger'>
+                Shorter joke below 200 characters please
               </Form.Text>
             )}
           </Form.Group>
-          <Form.Group className='mb-3'>
+          <Form.Group className='mb-4'>
             <Form.Label>Pick your favourite color 🌈</Form.Label>
             <Form.Select
               onChange={onColorChangeHandler}
@@ -261,28 +363,57 @@ const CreateRobotForm: React.FC = () => {
               <option value='violet'>Violet</option>
             </Form.Select>
             {colorHasError && (
-              <Form.Text className='text-muted'>Choose a color</Form.Text>
+              <Form.Text className='text-danger'>Choose a color</Form.Text>
             )}
           </Form.Group>
-          {/* <Form.Group className='mb-3'>
+          <Form.Group className='mb-4'>
             <Form.Label>Pick some favourite TV series 📺</Form.Label>
-            <Form.Check type={'checkbox'}>
-              <Form.Check.Input
-                type={'checkbox'}
-                defaultChecked={false}
-                onChange={}
-                onClick={(e) => {
-                  console.log(e.target);
-                }}
-              />
-              <Form.Check.Label>Awesome checkbox here..</Form.Check.Label>
-            </Form.Check>
-          </Form.Group> */}
-          <Form.Group className='mb-3'>
+            {TVSERIES.map((series, index) => {
+              return (
+                <div key={index}>
+                  <Form.Check.Label>
+                    <Form.Check
+                      inline
+                      type='checkbox'
+                      name={series}
+                      checked={tvSeries[series]}
+                      onChange={onCheckBoxChange}
+                    />
+                    {series}
+                  </Form.Check.Label>
+                </div>
+              );
+            })}
+            <Button
+              variant='info'
+              type='button'
+              size='sm'
+              className='mt-2'
+              onClick={onCheckAllCheckBoxes}
+            >
+              Select All
+            </Button>
+            <Button
+              variant='primary'
+              type='button'
+              size='sm'
+              className='mt-2 mx-2'
+              onClick={onUncheckAllCheckBoxes}
+            >
+              Deselect All
+            </Button>
+            <br />
+            {tvSeriesError && (
+              <Form.Text className='text-danger'>
+                C'mon, choose at least one tv programme
+              </Form.Text>
+            )}
+          </Form.Group>
+          <Form.Group className='mb-4'>
             <Form.Label>How many countries have you visited? 🇱🇰</Form.Label>
             <Form.Control
               type='number'
-              placeholder='1'
+              placeholder='🇸🇬  🇧🇳  🇺🇸  🇸🇪  🇮🇳  🇨🇦  🇦🇺'
               onChange={countriesChangeHandler}
               onBlur={countriesBlurHandler}
               value={enteredCountries}
@@ -291,39 +422,43 @@ const CreateRobotForm: React.FC = () => {
               step='1'
             />
             {countriesInputHasError && (
-              <Form.Text className='text-muted'>
+              <Form.Text className='text-danger'>
                 There are 195 countries in the world
               </Form.Text>
             )}
           </Form.Group>
-          <Form.Group className='mb-3'>
+          <Form.Group className='mb-4'>
             <Form.Label>Do you agree durians smell good? 💚</Form.Label>
             <br />
-            <RadioInput
-              inline
-              label='Yes'
-              value='yes'
-              checked={durian}
-              setter={setDurian}
-            />
-            <RadioInput
-              inline
-              label='No'
-              value='no'
-              checked={durian}
-              setter={setDurian}
-            />
+            <Form.Check.Label>
+              <RadioInput
+                inline
+                label='Yes'
+                value='yes'
+                checked={durians}
+                setter={setDurians}
+              />
+            </Form.Check.Label>
+            <Form.Check.Label>
+              <RadioInput
+                inline
+                label='No'
+                value='no'
+                checked={durians}
+                setter={setDurians}
+              />
+            </Form.Check.Label>
           </Form.Group>
           <Button
             variant='warning'
             type='submit'
-            // disabled={!formIsValid}
+            disabled={!formIsValid}
             className='mb-5'
           >
-            Submit
+            Create Robot 🤖
           </Button>
         </Form>
-      </HomePageStyled>
+      </FormStyled>
     </Container>
   );
 };
