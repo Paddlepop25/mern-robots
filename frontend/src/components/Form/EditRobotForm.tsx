@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { Button, Container, Form } from 'react-bootstrap';
-import { useParams } from 'react-router-dom';
+import { useParams, useHistory, Link } from 'react-router-dom';
 import { useInput } from '../../customHooks/useInput';
 import { RobotType } from '../../Pages/Robots';
 import { NickNameType } from '../RobotDetails/RobotDetails';
 import { capitalizedFirstLetterOfEveryWord } from '../Utils/Utils';
 import { FormStyled } from './CreateRobotForm.styles';
+import { GoBackButtonStyled } from './EditRobotForm.styles';
 import { RadioInput } from './RadioInput';
 import { TVSERIES } from './TvSeries.data';
 
@@ -28,31 +29,35 @@ const tvSeriesState: { [key: string]: boolean } = {
   Lucifer: false,
 };
 
-// coke: "8.1"
-// countries: "68"
+// coke: "4.2"
+// countries: "23"
 // durians: false
-// email: "xman-007@power.com"
-// favourite-color: "violet"
-// favourite-series: (2) ['Superman', '3rd Rock From the Sun']
-// joke: "i am The fuTURe presiDENT."
-// likes: 2
-// nickname: "x man"
-// robotNumber: "729"
-// robotUrl: "https://robohash.org/729"
-// timestamp: "2021-11-05T13:10:43.379Z"
-// _id: "61852d5374fa4f1de7a8e7bf"
+// email: "pumpkincoach123@gmail.com"
+// favourite-color: "Yellow"
+// favourite-series: (2) ['Moana', 'Cars']
+// joke: "What drink did the Node developer had? Expresso."
+// likes: 0
+// nickname: "cinderella"
+// robotNumber: "4"
+// robotUrl: "https://robohash.org/4"
+// timestamp: "2021-11-05T13:06:06.665Z"
+// _id: "61852c3ebac98bd061c02c17"
 
 const EditRobotForm: React.FC = () => {
-  const [mongoDbRobot, setMongoDbRobot] = useState<RobotType>();
+  const history = useHistory();
 
-  const [durians, setDurians] = useState(true);
+  const [mongoDbRobot, setMongoDbRobot] = useState<RobotType>();
+  const [nickname, setNickname] = useState('');
+  const [robotNumber, setRobotNumber] = useState('');
+  const [email, setEmail] = useState('');
+  const [coke, setCoke] = useState('');
+  const [joke, setJoke] = useState('');
   const [color, setColor] = useState('');
+  const [tvSeriesFromMongoDb, setTvSeriesFromMongoDb] = useState([]);
   const [tvSeries, setTvSeries] = useState(tvSeriesState);
   const [tvSeriesError, setTvSeriesError] = useState(false);
-
-  // const duriansAreValid = durians === 'yes' || durians === 'no';
-  const colorIsValid = color !== 'Colors of the Rainbow';
-  const colorHasError = !colorIsValid;
+  const [countries, setCountries] = useState('');
+  const [durians, setDurians] = useState(true);
 
   const getSpecificRobot = useParams<NickNameType>();
   const robotNickname = getSpecificRobot['nickname'];
@@ -62,18 +67,82 @@ const EditRobotForm: React.FC = () => {
       const result = await fetch(`/robots/${robotNickname}`);
       const robot = await result.json();
       setMongoDbRobot(robot);
+      setNickname(robot.nickname);
+      setRobotNumber(robot.robotNumber);
+      setEmail(robot.email);
+      setCoke(robot.coke);
+      setJoke(robot.joke);
+      setColor(robot['favourite-color']);
+      setTvSeriesFromMongoDb(robot['favourite-series']);
+      setCountries(robot.countries);
+      setDurians(robot.durians);
     };
     getRobot();
+    console.clear();
   }, []);
 
-  // select color
+  useEffect(() => {
+    const populateCheckBoxes = async () => {
+      tvSeriesFromMongoDb.forEach((seriesFromDb) => {
+        Object.keys(tvSeriesState).forEach((series) => {
+          if (seriesFromDb === series) {
+            setTvSeries((prevState) => ({
+              ...prevState,
+              [series]: true,
+            }));
+          }
+        });
+      });
+    };
+    populateCheckBoxes();
+  }, [tvSeriesFromMongoDb]);
+
+  const nicknameChangeHandler = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    setNickname(event.target.value);
+  };
+  const nicknameInputIsValid = nickname.trim() !== '';
+  const nicknameInputHasError = !nicknameInputIsValid;
+  const nicknameLengthBelow10 = nickname.length <= 10;
+
+  const robotNumberChangeHandler = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    setRobotNumber(event.target.value);
+  };
+  const robotNumberIsValid =
+    +robotNumber >= 1 && +robotNumber <= 1000 && !robotNumber.includes('.');
+  const robotNumberInputHasError = !robotNumberIsValid;
+
+  const emailChangeHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setEmail(event.target.value);
+  };
+  const emailIsValid = email.includes('@');
+  const emailInputHasError = !emailIsValid;
+
+  const cokeChangeHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setCoke(event.target.value);
+  };
+  const cokeIsValid = +coke > 0 && +coke <= 30;
+  const cokeInputHasError = coke === '' || !cokeIsValid;
+  const cokeIsOverPriced = +coke > 30;
+
+  const jokeChangeHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setJoke(event.target.value);
+  };
+  const jokeInputHasError = joke.trim() === '';
+  const jokeNotTooLong = joke.length <= 200;
+
   const onColorChangeHandler = (
     event: React.ChangeEvent<HTMLSelectElement>
   ) => {
     setColor(event.target.value);
   };
+  const colorIsValid = color !== 'Colors of the Rainbow';
+  const colorHasError = !colorIsValid;
 
-  // select tv series
+  // TV series
   const onCheckBoxChange = (
     event: React.ChangeEvent<HTMLInputElement>
   ): void => {
@@ -104,65 +173,14 @@ const EditRobotForm: React.FC = () => {
   );
   const tvSeriesMinimumOneChecked = Object.keys(checkedTvSeries).length > 0;
 
-  // hasError: nicknameInputHasError <-- this is giving an alias; renaming hasError
-  const {
-    value: enteredNickname,
-    isValid: enteredNicknameIsValid,
-    hasError: nicknameInputHasError,
-    onValueChangeHandler: nicknameChangeHandler,
-    onValueBlurHandler: nicknameBlurHandler,
-    reset: resetNicknameInput,
-  } = useInput((value) => value.trim() !== '');
-  const nicknameLengthBelow10 = enteredNickname.length <= 10;
-
-  const {
-    value: enteredRobotNumber,
-    isValid: enteredRobotNumberIsValid,
-    hasError: robotNumberInputHasError,
-    onValueChangeHandler: robotNumberChangeHandler,
-    onValueBlurHandler: robotNumberBlurHandler,
-    reset: resetRobotNumberInput,
-  } = useInput(
-    (value) => +value >= 1 && +value <= 1000 && !value.includes('.')
-  );
-
-  const {
-    value: enteredEmail,
-    isValid: enteredEmailIsValid,
-    hasError: emailInputHasError,
-    onValueChangeHandler: emailChangeHandler,
-    onValueBlurHandler: emailBlurHandler,
-    reset: resetEmailInput,
-  } = useInput((value) => value.includes('@'));
-
-  const {
-    value: enteredCoke,
-    isValid: enteredCokeIsValid,
-    hasError: cokeInputHasError,
-    onValueChangeHandler: cokeChangeHandler,
-    onValueBlurHandler: cokeBlurHandler,
-    reset: resetCokeInput,
-  } = useInput((value) => +value >= 0.1 && +value <= 30);
-  const cokeIsOverPriced = +enteredCoke > 30;
-
-  const {
-    value: enteredJoke,
-    isValid: enteredJokeIsValid,
-    hasError: jokeInputHasError,
-    onValueChangeHandler: jokeChangeHandler,
-    onValueBlurHandler: jokeBlurHandler,
-    reset: resetJokeInput,
-  } = useInput((value) => value.trim() !== '');
-  const jokeNotTooLong = enteredJoke.length <= 200;
-
-  const {
-    value: enteredCountries,
-    isValid: enteredCountriesIsValid,
-    hasError: countriesInputHasError,
-    onValueChangeHandler: countriesChangeHandler,
-    onValueBlurHandler: countriesBlurHandler,
-    reset: resetCountriesInput,
-  } = useInput((value) => +value >= 1 && +value <= 195 && !value.includes('.'));
+  const countriesChangeHandler = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    setCountries(event.target.value);
+  };
+  const countriesIsValid =
+    +countries >= 1 && +countries <= 195 && !countries.includes('.');
+  const countriesInputHasError = countries === '' || !countriesIsValid;
 
   const onSubmitHandler = (event: React.FormEvent<HTMLFormElement>): void => {
     event.preventDefault();
@@ -176,55 +194,31 @@ const EditRobotForm: React.FC = () => {
       }
     })();
 
-    if (
-      !enteredNicknameIsValid ||
-      !nicknameLengthBelow10 ||
-      !enteredEmailIsValid ||
-      !enteredRobotNumberIsValid ||
-      !enteredCokeIsValid ||
-      !enteredJokeIsValid ||
-      colorHasError ||
-      tvSeriesHasError ||
-      !enteredCountriesIsValid
-    ) {
-      return;
-    }
-
     let tvSeriesArray = [];
-    for (let key in mongoDbRobot) {
+    for (let key in tvSeries) {
       if (tvSeries[key] === true) {
         tvSeriesArray.push(key);
       }
     }
-    // // https://stackoverflow.com/questions/57667198/typescript-error-type-string-cant-be-used-to-index-type-x/57667278#57667278
-    // // !using Typescript Indexable types
-    // for (let key in tvSeries) {
-    //   // !using Typescript Utility type
-    //   //   // console.log(`${key}: ${tvSeriesIsChecked[key]}`);
-    //   // for (const key of Object.keys(tvSeries)) {
-    //   if (tvSeries[key] === true) {
-    //     tvSeriesArray.push(key);
-    //   }
-    // }
 
     // const duriansBoolean = durians === 'yes' ? true : false;
     // send to browser
     const editedRobot = {
-      nickname: enteredNickname,
-      robotNumber: enteredRobotNumber,
-      email: enteredEmail,
-      coke: enteredCoke,
-      joke: enteredJoke,
+      nickname,
+      robotNumber,
+      email,
+      coke,
+      joke,
       'favourite-color': color,
       'favourite-series': tvSeriesArray,
-      countries: enteredCountries,
+      countries,
       durians,
     };
-    // console.clear();
+    console.clear();
     console.log(editedRobot);
 
     // fetch('/robots/newrobot', {
-    //   method: 'POST',
+    //   method: 'PUT',
     //   headers: {
     //     'Content-Type': 'application/json',
     //   },
@@ -241,16 +235,16 @@ const EditRobotForm: React.FC = () => {
     //   }),
     // });
 
-    resetNicknameInput();
-    resetEmailInput();
-    resetRobotNumberInput();
-    resetCokeInput();
-    resetJokeInput();
-    setColor(''); // how to reset to original?
-    // selectColorInputRef.current.select.clearValue();
-    onUncheckAllCheckBoxes();
-    resetCountriesInput();
-    setDurians(true);
+    // reset
+    setNickname('');
+    setRobotNumber('');
+    setEmail('');
+    setCoke('');
+    setJoke('');
+    setColor('');
+    setCountries('');
+    // setDurians()
+    history.goBack();
   };
 
   return (
@@ -258,13 +252,14 @@ const EditRobotForm: React.FC = () => {
       {mongoDbRobot && (
         <FormStyled>
           <Form onSubmit={onSubmitHandler}>
-            <h3>Create A Robot</h3>
+            <h3>Edit This Robot</h3>
             <Form.Group className='mb-4'>
               <Form.Label>Give a robot nickname 🤖</Form.Label>
               <Form.Control
                 type='text'
                 onChange={nicknameChangeHandler}
-                value={capitalizedFirstLetterOfEveryWord(mongoDbRobot.nickname)}
+                // value={capitalizedFirstLetterOfEveryWord(nickname)}
+                value={capitalizedFirstLetterOfEveryWord(nickname)}
               />
               {nicknameInputHasError && (
                 <Form.Text className='text-danger'>
@@ -282,7 +277,7 @@ const EditRobotForm: React.FC = () => {
               <Form.Control
                 type='number'
                 onChange={robotNumberChangeHandler}
-                value={mongoDbRobot.robotNumber}
+                value={robotNumber}
                 min='1'
                 max='1000'
                 step='1'
@@ -298,7 +293,7 @@ const EditRobotForm: React.FC = () => {
               <Form.Control
                 type='email'
                 onChange={emailChangeHandler}
-                value={mongoDbRobot.email}
+                value={email}
               />
               {emailInputHasError && (
                 <Form.Text className='text-danger'>
@@ -313,13 +308,11 @@ const EditRobotForm: React.FC = () => {
               <Form.Control
                 type='number'
                 onChange={cokeChangeHandler}
-                value={mongoDbRobot.coke}
+                value={coke}
                 min='0.1'
                 max='30'
                 step='0.1'
               />
-              {/* <Form.Range min='0.1' max='10' step='0.1' /> */}
-              {/* <p>SGD$ value</p> */}
               {cokeInputHasError && (
                 <Form.Text className='text-danger'>
                   Please enter a valid number
@@ -339,7 +332,7 @@ const EditRobotForm: React.FC = () => {
                 rows={3}
                 type='text'
                 onChange={jokeChangeHandler}
-                value={mongoDbRobot.joke}
+                value={joke}
               />
               {jokeInputHasError && (
                 <Form.Text className='text-danger'>Make me laugh</Form.Text>
@@ -352,10 +345,7 @@ const EditRobotForm: React.FC = () => {
             </Form.Group>
             <Form.Group className='mb-4'>
               <Form.Label>Pick your favourite color 🌈</Form.Label>
-              <Form.Select
-                onChange={onColorChangeHandler}
-                value={mongoDbRobot['favourite-color']}
-              >
+              <Form.Select onChange={onColorChangeHandler}>
                 <option>Colors of the Rainbow</option>
                 <option value='red'>Red</option>
                 <option value='orange'>Orange</option>
@@ -365,6 +355,10 @@ const EditRobotForm: React.FC = () => {
                 <option value='indigo'>Indigo</option>
                 <option value='violet'>Violet</option>
               </Form.Select>
+              <Form.Text className='text-danger'>
+                Was '{mongoDbRobot['favourite-color']}'. Do you want to pick
+                another one?
+              </Form.Text>
               {colorHasError && (
                 <Form.Text className='text-danger'>Choose a color</Form.Text>
               )}
@@ -408,7 +402,7 @@ const EditRobotForm: React.FC = () => {
               <br />
               {tvSeriesError && (
                 <Form.Text className='text-danger'>
-                  C'mon, choose at least 1 Tv Programme
+                  C'mon, choose at least 1 TV Programme
                 </Form.Text>
               )}
             </Form.Group>
@@ -417,7 +411,7 @@ const EditRobotForm: React.FC = () => {
               <Form.Control
                 type='number'
                 onChange={countriesChangeHandler}
-                value={mongoDbRobot.countries}
+                value={countries}
                 min='1'
                 max='195'
                 step='1'
@@ -436,7 +430,7 @@ const EditRobotForm: React.FC = () => {
                   inline
                   label='Yes!'
                   value={true}
-                  checked={mongoDbRobot.durians}
+                  checked={durians}
                   setter={setDurians}
                 />
               </Form.Check.Label>
@@ -445,13 +439,18 @@ const EditRobotForm: React.FC = () => {
                   inline
                   label='Eww...'
                   value={false}
-                  checked={mongoDbRobot.durians}
+                  checked={durians}
                   setter={setDurians}
                 />
               </Form.Check.Label>
             </Form.Group>
-            <Button variant='warning' type='submit' className='mb-2'>
+            <Button variant='warning' type='submit' className='mb-2 mx-2'>
               Save Robot 🤖
+            </Button>
+            <Button variant='info' type='button' className='mb-2'>
+              <GoBackButtonStyled>
+                <Link to='/robots'>Go back ⬅️</Link>
+              </GoBackButtonStyled>
             </Button>
           </Form>
         </FormStyled>

@@ -3,8 +3,6 @@ import styled from 'styled-components';
 export const NavbarStyled = styled.div`
   height: 4.1rem;
   width: 100vw;
-  // position: fixed;
-  // top: 0;
   text-align: center;
   border-bottom: 0.25rem solid #db7093;
 `;

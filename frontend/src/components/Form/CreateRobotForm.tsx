@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Button, Container, Form } from 'react-bootstrap';
+import { useHistory } from 'react-router-dom';
 import { useInput } from '../../customHooks/useInput';
 import { FormStyled } from './CreateRobotForm.styles';
 import { RadioInput } from './RadioInput';
@@ -25,6 +26,7 @@ const tvSeriesState: { [key: string]: boolean } = {
 };
 
 const CreateRobotForm: React.FC = () => {
+  const history = useHistory();
   const [durians, setDurians] = React.useState(true);
   const [color, setColor] = useState('Colors of the Rainbow');
   const [colorIsTouched, setColorIsTouched] = useState(false);
@@ -235,6 +237,8 @@ const CreateRobotForm: React.FC = () => {
     onUncheckAllCheckBoxes();
     resetCountriesInput();
     setDurians(true);
+
+    history.push('/robots');
   };
 
   return (

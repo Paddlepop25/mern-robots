@@ -80,7 +80,7 @@ const RobotDetails: React.FC = () => {
                 </p>
                 <p>
                   🥫 Price of a can of Coke in your country :{' '}
-                  <code>SGD&#36;{robot.coke}0</code>
+                  <code>SGD&#36;{robot.coke}</code>
                 </p>
                 <p>
                   🤣 Joke : <code>{robot.joke}</code>

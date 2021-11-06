@@ -34,3 +34,31 @@ export const useInput = (validateValue: ValidateValueFunction) => {
     reset,
   };
 };
+
+export const useEditInput = (
+  validateValue: ValidateValueFunction,
+  initialValue: string
+) => {
+  const [enteredValue, setEnteredValue] = useState(initialValue);
+
+  const valueIsValid = validateValue(enteredValue);
+  const hasError = !valueIsValid;
+
+  const onValueChangeHandler = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ): void => {
+    setEnteredValue(event.target.value);
+  };
+
+  const reset = () => {
+    setEnteredValue('');
+  };
+
+  return {
+    value: enteredValue,
+    isValid: valueIsValid,
+    hasError,
+    onValueChangeHandler,
+    reset,
+  };
+};
