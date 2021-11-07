@@ -50,6 +50,18 @@ const CreateRobotForm: React.FC = () => {
   };
 
   // select tv series
+  let tvSeriesArray: string[] = [];
+  // https://stackoverflow.com/questions/57667198/typescript-error-type-string-cant-be-used-to-index-type-x/57667278#57667278
+  // !using Typescript Indexable types
+  for (let key in tvSeries) {
+    // !using Typescript Utility type
+    //   // console.log(`${key}: ${tvSeriesIsChecked[key]}`);
+    // for (const key of Object.keys(tvSeries)) {
+    if (tvSeries[key] === true) {
+      tvSeriesArray.push(key);
+    }
+  }
+
   const onCheckBoxChange = (
     event: React.ChangeEvent<HTMLInputElement>
   ): void => {
@@ -182,18 +194,6 @@ const CreateRobotForm: React.FC = () => {
       return;
     }
 
-    let tvSeriesArray = [];
-    // https://stackoverflow.com/questions/57667198/typescript-error-type-string-cant-be-used-to-index-type-x/57667278#57667278
-    // !using Typescript Indexable types
-    for (let key in tvSeries) {
-      // !using Typescript Utility type
-      //   // console.log(`${key}: ${tvSeriesIsChecked[key]}`);
-      // for (const key of Object.keys(tvSeries)) {
-      if (tvSeries[key] === true) {
-        tvSeriesArray.push(key);
-      }
-    }
-
     // send to browser
     const newRobot = {
       nickname: enteredNickname,
@@ -267,24 +267,6 @@ const CreateRobotForm: React.FC = () => {
             )}
           </Form.Group>
           <Form.Group className='mb-4'>
-            <Form.Label>Choose a number between 1 and 1000 💯</Form.Label>
-            <Form.Control
-              type='number'
-              placeholder='888'
-              onChange={robotNumberChangeHandler}
-              onBlur={robotNumberBlurHandler}
-              value={enteredRobotNumber}
-              min='1'
-              max='1000'
-              step='1'
-            />
-            {robotNumberInputHasError && (
-              <Form.Text className='text-danger'>
-                Please enter a valid whole number below 1001
-              </Form.Text>
-            )}
-          </Form.Group>
-          <Form.Group className='mb-4'>
             <Form.Label>Your email 💌</Form.Label>
             <Form.Control
               type='email'
@@ -300,50 +282,20 @@ const CreateRobotForm: React.FC = () => {
             )}
           </Form.Group>
           <Form.Group className='mb-4'>
-            <Form.Label>
-              How much is a can of Coke 🥫 in your country?
-            </Form.Label>
+            <Form.Label>Choose a number between 1 and 1000 🔢</Form.Label>
             <Form.Control
               type='number'
-              placeholder='1.20'
-              onChange={cokeChangeHandler}
-              onBlur={cokeBlurHandler}
-              value={enteredCoke}
-              min='0.1'
-              max='30'
-              step='0.1'
+              placeholder='888'
+              onChange={robotNumberChangeHandler}
+              onBlur={robotNumberBlurHandler}
+              value={enteredRobotNumber}
+              min='1'
+              max='1000'
+              step='1'
             />
-            {/* <Form.Range min='0.1' max='10' step='0.1' /> */}
-            {/* <p>SGD$ value</p> */}
-            {cokeInputHasError && (
+            {robotNumberInputHasError && (
               <Form.Text className='text-danger'>
-                Please enter a valid number
-              </Form.Text>
-            )}
-            {cokeIsOverPriced && (
-              <Form.Text className='text-danger'>
-                <br />
-                🥴 Does it cost THAT much?
-              </Form.Text>
-            )}
-          </Form.Group>
-          <Form.Group className='mb-4'>
-            <Form.Label>Tell me a joke! 🤣</Form.Label>
-            <Form.Control
-              as='textarea'
-              rows={3}
-              type='text'
-              placeholder='Knock knock!'
-              onChange={jokeChangeHandler}
-              onBlur={jokeBlurHandler}
-              value={enteredJoke}
-            />
-            {jokeInputHasError && (
-              <Form.Text className='text-danger'>Make me laugh</Form.Text>
-            )}
-            {!jokeNotTooLong && (
-              <Form.Text className='text-danger'>
-                Shorter joke below 200 characters please
+                Please enter a valid whole number below 1001
               </Form.Text>
             )}
           </Form.Group>
@@ -410,6 +362,55 @@ const CreateRobotForm: React.FC = () => {
               </Form.Text>
             )}
           </Form.Group>
+          <Form.Group className='mb-4'>
+            <Form.Label>
+              How much is a can of Coke 🥫 in your country?
+            </Form.Label>
+            <Form.Control
+              type='number'
+              placeholder='1.20'
+              onChange={cokeChangeHandler}
+              onBlur={cokeBlurHandler}
+              value={enteredCoke}
+              min='0.10'
+              max='30'
+              step='0.10'
+            />
+            {/* <Form.Range min='0.1' max='10' step='0.1' /> */}
+            {/* <p>SGD$ value</p> */}
+            {cokeInputHasError && (
+              <Form.Text className='text-danger'>
+                Please enter a valid number
+              </Form.Text>
+            )}
+            {cokeIsOverPriced && (
+              <Form.Text className='text-danger'>
+                <br />
+                🥴 Does it cost THAT much?
+              </Form.Text>
+            )}
+          </Form.Group>
+          <Form.Group className='mb-4'>
+            <Form.Label>Tell me a joke! 🤣</Form.Label>
+            <Form.Control
+              as='textarea'
+              rows={3}
+              type='text'
+              placeholder='Knock knock!'
+              onChange={jokeChangeHandler}
+              onBlur={jokeBlurHandler}
+              value={enteredJoke}
+            />
+            {jokeInputHasError && (
+              <Form.Text className='text-danger'>Make me laugh</Form.Text>
+            )}
+            {!jokeNotTooLong && (
+              <Form.Text className='text-danger'>
+                Shorter joke below 200 characters please
+              </Form.Text>
+            )}
+          </Form.Group>
+
           <Form.Group className='mb-4'>
             <Form.Label>How many countries have you visited?</Form.Label>
             <Form.Control

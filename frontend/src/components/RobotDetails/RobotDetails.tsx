@@ -5,8 +5,13 @@ import { RobotType } from '../../Pages/Robots';
 import {
   capitalizedFirstLetter,
   capitalizedFirstLetterOfEveryWord,
+  convertNewDateToDisplay,
 } from '../Utils/Utils';
-import { ButtonsStyled, RobotDetailsStyled } from './RobotDetails.styles';
+import {
+  ButtonsStyled,
+  RobotCreateStyled,
+  RobotDetailsStyled,
+} from './RobotDetails.styles';
 export interface NickNameType {
   nickname: string;
 }
@@ -57,6 +62,12 @@ const RobotDetails: React.FC = () => {
                   src={robot.robotUrl}
                   alt={`details of robot ${robot.nickname}`}
                 />
+                <br />
+                <RobotCreateStyled>
+                  <code>
+                    Created on {convertNewDateToDisplay(robot.timestamp)}
+                  </code>
+                </RobotCreateStyled>
               </Col>
               <Col xs={12} md={6} lg={8}>
                 <p className='capitalize mt-3'>
@@ -67,6 +78,9 @@ const RobotDetails: React.FC = () => {
                 </p>
                 <p>
                   💌 Email : <code>{robot.email}</code>
+                </p>
+                <p>
+                  🔢 Favourite number : <code>{robot.robotNumber}</code>
                 </p>
                 <p>
                   🌈 Favourite color :{' '}

@@ -4,12 +4,18 @@ export const RobotDetailsStyled = styled.div`
   margin: 1rem;
 
   code {
-    color: #db7093;
     font-weight: bold;
   }
 
   .capitalize {
     text-transform: capitalize;
+  }
+`;
+
+export const RobotCreateStyled = styled.div`
+  text-align: center;
+  code {
+    color: #989898;
   }
 `;
 

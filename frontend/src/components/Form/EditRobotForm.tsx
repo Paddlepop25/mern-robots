@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { Button, Container, Form } from 'react-bootstrap';
 import { useParams, useHistory, Link } from 'react-router-dom';
-import { useInput } from '../../customHooks/useInput';
 import { RobotType } from '../../Pages/Robots';
 import { NickNameType } from '../RobotDetails/RobotDetails';
-import { capitalizedFirstLetterOfEveryWord } from '../Utils/Utils';
+import {
+  capitalizedFirstLetter,
+  capitalizedFirstLetterOfEveryWord,
+} from '../Utils/Utils';
 import { FormStyled } from './CreateRobotForm.styles';
 import { GoBackButtonStyled } from './EditRobotForm.styles';
 import { RadioInput } from './RadioInput';
@@ -29,22 +31,10 @@ const tvSeriesState: { [key: string]: boolean } = {
   Lucifer: false,
 };
 
-// coke: "4.2"
-// countries: "23"
-// durians: false
-// email: "pumpkincoach123@gmail.com"
-// favourite-color: "Yellow"
-// favourite-series: (2) ['Moana', 'Cars']
-// joke: "What drink did the Node developer had? Expresso."
-// likes: 0
-// nickname: "cinderella"
-// robotNumber: "4"
-// robotUrl: "https://robohash.org/4"
-// timestamp: "2021-11-05T13:06:06.665Z"
-// _id: "61852c3ebac98bd061c02c17"
-
 const EditRobotForm: React.FC = () => {
   const history = useHistory();
+  const getSpecificRobot = useParams<NickNameType>();
+  const robotNickname = getSpecificRobot['nickname'];
 
   const [mongoDbRobot, setMongoDbRobot] = useState<RobotType>();
   const [nickname, setNickname] = useState('');
@@ -58,9 +48,6 @@ const EditRobotForm: React.FC = () => {
   const [tvSeriesError, setTvSeriesError] = useState(false);
   const [countries, setCountries] = useState('');
   const [durians, setDurians] = useState(true);
-
-  const getSpecificRobot = useParams<NickNameType>();
-  const robotNickname = getSpecificRobot['nickname'];
 
   useEffect(() => {
     const getRobot = async () => {
@@ -201,7 +188,6 @@ const EditRobotForm: React.FC = () => {
       }
     }
 
-    // const duriansBoolean = durians === 'yes' ? true : false;
     // send to browser
     const editedRobot = {
       nickname,
@@ -273,22 +259,6 @@ const EditRobotForm: React.FC = () => {
               )}
             </Form.Group>
             <Form.Group className='mb-4'>
-              <Form.Label>Choose a number between 1 and 1000 💯</Form.Label>
-              <Form.Control
-                type='number'
-                onChange={robotNumberChangeHandler}
-                value={robotNumber}
-                min='1'
-                max='1000'
-                step='1'
-              />
-              {robotNumberInputHasError && (
-                <Form.Text className='text-danger'>
-                  Please enter a valid whole number below 1001
-                </Form.Text>
-              )}
-            </Form.Group>
-            <Form.Group className='mb-4'>
               <Form.Label>Your email 💌</Form.Label>
               <Form.Control
                 type='email'
@@ -302,44 +272,18 @@ const EditRobotForm: React.FC = () => {
               )}
             </Form.Group>
             <Form.Group className='mb-4'>
-              <Form.Label>
-                How much is a can of Coke 🥫 in your country?
-              </Form.Label>
+              <Form.Label>Choose a number between 1 and 1000 🔢</Form.Label>
               <Form.Control
                 type='number'
-                onChange={cokeChangeHandler}
-                value={coke}
-                min='0.1'
-                max='30'
-                step='0.1'
+                onChange={robotNumberChangeHandler}
+                value={robotNumber}
+                min='1'
+                max='1000'
+                step='1'
               />
-              {cokeInputHasError && (
+              {robotNumberInputHasError && (
                 <Form.Text className='text-danger'>
-                  Please enter a valid number
-                </Form.Text>
-              )}
-              {cokeIsOverPriced && (
-                <Form.Text className='text-danger'>
-                  <br />
-                  🥴 Does it cost THAT much?
-                </Form.Text>
-              )}
-            </Form.Group>
-            <Form.Group className='mb-4'>
-              <Form.Label>Tell me a joke! 🤣</Form.Label>
-              <Form.Control
-                as='textarea'
-                rows={3}
-                type='text'
-                onChange={jokeChangeHandler}
-                value={joke}
-              />
-              {jokeInputHasError && (
-                <Form.Text className='text-danger'>Make me laugh</Form.Text>
-              )}
-              {!jokeNotTooLong && (
-                <Form.Text className='text-danger'>
-                  Shorter joke below 200 characters please
+                  Please enter a valid whole number below 1001
                 </Form.Text>
               )}
             </Form.Group>
@@ -356,8 +300,8 @@ const EditRobotForm: React.FC = () => {
                 <option value='violet'>Violet</option>
               </Form.Select>
               <Form.Text className='text-danger'>
-                Was '{mongoDbRobot['favourite-color']}'. Do you want to pick
-                another one?
+                Was '{capitalizedFirstLetter(mongoDbRobot['favourite-color'])}'.
+                Do you want to pick another one?
               </Form.Text>
               {colorHasError && (
                 <Form.Text className='text-danger'>Choose a color</Form.Text>
@@ -406,6 +350,49 @@ const EditRobotForm: React.FC = () => {
                 </Form.Text>
               )}
             </Form.Group>
+            <Form.Group className='mb-4'>
+              <Form.Label>
+                How much is a can of Coke 🥫 in your country?
+              </Form.Label>
+              <Form.Control
+                type='number'
+                onChange={cokeChangeHandler}
+                value={coke}
+                min='0.1'
+                max='30'
+                step='0.1'
+              />
+              {cokeInputHasError && (
+                <Form.Text className='text-danger'>
+                  Please enter a valid number
+                </Form.Text>
+              )}
+              {cokeIsOverPriced && (
+                <Form.Text className='text-danger'>
+                  <br />
+                  🥴 Does it cost THAT much?
+                </Form.Text>
+              )}
+            </Form.Group>
+            <Form.Group className='mb-4'>
+              <Form.Label>Tell me a joke! 🤣</Form.Label>
+              <Form.Control
+                as='textarea'
+                rows={3}
+                type='text'
+                onChange={jokeChangeHandler}
+                value={joke}
+              />
+              {jokeInputHasError && (
+                <Form.Text className='text-danger'>Make me laugh</Form.Text>
+              )}
+              {!jokeNotTooLong && (
+                <Form.Text className='text-danger'>
+                  Shorter joke below 200 characters please
+                </Form.Text>
+              )}
+            </Form.Group>
+
             <Form.Group className='mb-4'>
               <Form.Label>How many countries have you visited?</Form.Label>
               <Form.Control
