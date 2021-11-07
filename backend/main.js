@@ -36,10 +36,10 @@ const trimAndLowerCaseFn = (input) => {
 const mkMyFavourites = (params) => {
   return {
     timestamp: new Date(),
-    robotNumber: params.robotNumber,
-    robotUrl: `https://robohash.org/${params.robotNumber}`,
     nickname: trimAndLowerCaseFn(params.nickname),
     email: trimAndLowerCaseFn(params.email),
+    robotNumber: params.robotNumber,
+    robotUrl: `https://robohash.org/${params.robotNumber}`,
     'favourite-color': trimAndLowerCaseFn(params['favourite-color']),
     'favourite-series': params['favourite-series'],
     coke: params.coke,
@@ -89,14 +89,14 @@ app.post('/robots/newrobot', async (req, res) => {
     req.body;
   const robotInfo = {
     timestamp: new Date(),
-    robotNumber,
-    robotUrl: `https://robohash.org/${robotNumber}`,
     nickname,
     email,
-    coke,
-    joke,
+    robotNumber,
+    robotUrl: `https://robohash.org/${robotNumber}`,
     'favourite-color': req.body['favourite-color'],
     'favourite-series': req.body['favourite-series'],
+    coke,
+    joke,
     countries,
     durians,
     likes: 0,
@@ -163,13 +163,14 @@ app.put('/robots/:nickname/edit', async (req, res) => {
   } = req.body;
   const robotInfo = {
     timestamp: new Date(),
-    robotNumber,
     nickname,
     email,
-    coke,
-    joke,
+    robotNumber,
+    robotUrl: `https://robohash.org/${robotNumber}`,
     'favourite-color': req.body['favourite-color'],
     'favourite-series': req.body['favourite-series'],
+    coke,
+    joke,
     countries,
     durians,
     likes,
@@ -186,8 +187,11 @@ app.put('/robots/:nickname/edit', async (req, res) => {
         { nickname: paramsnickname },
         {
           $set: {
+            timestamp: robotInfo.timestamp,
             nickname: newRobot.nickname,
             email: newRobot.email,
+            robotNumber: newRobot.robotNumber,
+            robotUrl: newRobot.robotUrl,
             'favourite-color': newRobot['favourite-color'],
             'favourite-series': newRobot['favourite-series'],
             coke: newRobot.coke,

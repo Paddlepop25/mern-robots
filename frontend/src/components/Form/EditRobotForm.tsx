@@ -48,6 +48,7 @@ const EditRobotForm: React.FC = () => {
   const [tvSeriesError, setTvSeriesError] = useState(false);
   const [countries, setCountries] = useState('');
   const [durians, setDurians] = useState(true);
+  const [likes, setLikes] = useState(0);
 
   useEffect(() => {
     const getRobot = async () => {
@@ -63,6 +64,7 @@ const EditRobotForm: React.FC = () => {
       setTvSeriesFromMongoDb(robot['favourite-series']);
       setCountries(robot.countries);
       setDurians(robot.durians);
+      setLikes(robot.likes);
     };
     getRobot();
     console.clear();
@@ -166,6 +168,7 @@ const EditRobotForm: React.FC = () => {
   };
   const jokeInputHasError = joke.trim() === '';
   const jokeNotTooLong = joke.length <= 200;
+  const jokeIsValid = !jokeInputHasError && jokeNotTooLong;
 
   const countriesChangeHandler = (
     event: React.ChangeEvent<HTMLInputElement>
@@ -184,10 +187,26 @@ const EditRobotForm: React.FC = () => {
     emailIsValid &&
     robotNumberIsValid &&
     colorIsValid &&
-    tvSeriesMinimumOneChecked
+    tvSeriesMinimumOneChecked &&
+    !cokeInputHasError &&
+    !cokeIsOverPriced &&
+    jokeIsValid &&
+    !countriesInputHasError
   ) {
     formIsValid = true;
   }
+
+  const resetForm = () => {
+    setNickname('');
+    setEmail('');
+    setRobotNumber('');
+    // setColor('');
+    onUncheckAllCheckBoxes();
+    setCoke('');
+    setJoke('');
+    setCountries('');
+    setDurians(true);
+  };
 
   const onSubmitHandler = (event: React.FormEvent<HTMLFormElement>): void => {
     event.preventDefault();
@@ -204,46 +223,42 @@ const EditRobotForm: React.FC = () => {
     // send to browser
     const editedRobot = {
       nickname,
-      robotNumber,
       email,
-      coke,
-      joke,
+      robotNumber,
       'favourite-color': color,
       'favourite-series': tvSeriesArray,
+      coke,
+      joke,
       countries,
       durians,
+      likes,
     };
     console.clear();
     console.log(editedRobot);
 
-    // fetch('/robots/newrobot', {
-    //   method: 'PUT',
-    //   headers: {
-    //     'Content-Type': 'application/json',
-    //   },
-    //   body: JSON.stringify({
-    //     nickname: enteredNickname,
-    //     robotNumber: enteredRobotNumber,
-    //     email: enteredEmail,
-    //     coke: enteredCoke,
-    //     joke: enteredJoke,
-    //     'favourite-color': color,
-    //     'favourite-series': tvSeriesArray,
-    //     countries: enteredCountries,
-    //     durians,
-    //   }),
-    // });
+    fetch(`/robots/${robotNickname}/edit`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        nickname,
+        email,
+        robotNumber,
+        'favourite-color': color,
+        'favourite-series': tvSeriesArray,
+        coke,
+        joke,
+        countries,
+        durians,
+        likes,
+      }),
+    });
 
-    // reset
-    setNickname('');
-    setRobotNumber('');
-    setEmail('');
-    setCoke('');
-    setJoke('');
-    setColor('');
-    setCountries('');
-    // setDurians()
-    history.goBack();
+    // reset form
+    resetForm();
+
+    history.push(`/robots/${nickname}`);
   };
 
   return (
@@ -364,7 +379,7 @@ const EditRobotForm: React.FC = () => {
                 </Form.Text>
               )}
             </Form.Group>
-            {/* <Form.Group className='mb-4'>
+            <Form.Group className='mb-4'>
               <Form.Label>
                 How much is a can of Coke 🥫 in your country?
               </Form.Label>
@@ -387,8 +402,8 @@ const EditRobotForm: React.FC = () => {
                   🥴 Does it cost THAT much?
                 </Form.Text>
               )}
-            </Form.Group> */}
-            {/* <Form.Group className='mb-4'>
+            </Form.Group>
+            <Form.Group className='mb-4'>
               <Form.Label>Tell me a joke! 🤣</Form.Label>
               <Form.Control
                 as='textarea'
@@ -405,8 +420,8 @@ const EditRobotForm: React.FC = () => {
                   Shorter joke below 200 characters please
                 </Form.Text>
               )}
-            </Form.Group> */}
-            {/* <Form.Group className='mb-4'>
+            </Form.Group>
+            <Form.Group className='mb-4'>
               <Form.Label>How many countries have you visited?</Form.Label>
               <Form.Control
                 type='number'
@@ -421,8 +436,8 @@ const EditRobotForm: React.FC = () => {
                   There are 195 countries in the world
                 </Form.Text>
               )}
-            </Form.Group> */}
-            {/* <Form.Group className='mb-4'>
+            </Form.Group>
+            <Form.Group className='mb-4'>
               <Form.Label>Do you agree durians smell good? 💚</Form.Label>
               <br />
               <Form.Check.Label>
@@ -443,7 +458,7 @@ const EditRobotForm: React.FC = () => {
                   setter={setDurians}
                 />
               </Form.Check.Label>
-            </Form.Group> */}
+            </Form.Group>
             <Button
               variant='warning'
               type='submit'

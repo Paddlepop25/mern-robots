@@ -172,10 +172,9 @@ const CreateRobotForm: React.FC = () => {
     resetNicknameInput();
     resetEmailInput();
     resetRobotNumberInput();
+    onUncheckAllCheckBoxes();
     resetCokeInput();
     resetJokeInput();
-    // setColor(''); // how to reset to original?
-    onUncheckAllCheckBoxes();
     resetCountriesInput();
     setDurians(true);
   };
@@ -209,16 +208,16 @@ const CreateRobotForm: React.FC = () => {
     // send to browser
     const newRobot = {
       nickname: enteredNickname,
-      robotNumber: enteredRobotNumber,
       email: enteredEmail,
-      coke: enteredCoke,
-      joke: enteredJoke,
+      robotNumber: enteredRobotNumber,
       'favourite-color': color,
       'favourite-series': tvSeriesArray,
+      coke: enteredCoke,
+      joke: enteredJoke,
       countries: enteredCountries,
       durians,
     };
-    // console.clear();
+    console.clear();
     console.log(newRobot);
 
     fetch('/robots/newrobot', {
@@ -228,12 +227,12 @@ const CreateRobotForm: React.FC = () => {
       },
       body: JSON.stringify({
         nickname: enteredNickname,
-        robotNumber: enteredRobotNumber,
         email: enteredEmail,
-        coke: enteredCoke,
-        joke: enteredJoke,
+        robotNumber: enteredRobotNumber,
         'favourite-color': color,
         'favourite-series': tvSeriesArray,
+        coke: enteredCoke,
+        joke: enteredJoke,
         countries: enteredCountries,
         durians,
       }),
