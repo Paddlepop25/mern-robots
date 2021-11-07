@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Button, Card, Col, Container, Row } from 'react-bootstrap';
+import { Button, Card, Col, Container, Row, Spinner } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 import { LikesStyled, RobotsStyled } from './Robots.styles';
 
@@ -42,7 +42,7 @@ const Favourites: React.FC = (): React.ReactElement => {
   return (
     <RobotsStyled>
       <Container>
-        {!robots && <p>LOADING ....</p>}
+        {!robots && <Spinner animation='border' variant='danger' />}
         <Row>
           {robots &&
             robots.map((robot) => (

@@ -3,9 +3,8 @@ import styled from 'styled-components';
 export const HomePageStyled = styled.div`
   border-radius: 1rem;
   width: 70vw;
-  height: 95vh;
   margin: 0 auto;
-  // margin-bottom: 3rem;
+  margin-bottom: 3rem;
   padding: 3rem;
   background: #ffcce6;
 
@@ -14,7 +13,7 @@ export const HomePageStyled = styled.div`
   }
 
   @media only screen and (max-width: 520px) {
-    height: 140vh;
+    padding: 1rem;
   }
 `;
 
