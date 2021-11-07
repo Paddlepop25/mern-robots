@@ -168,6 +168,18 @@ const CreateRobotForm: React.FC = () => {
     formIsValid = true;
   }
 
+  const resetForm = () => {
+    resetNicknameInput();
+    resetEmailInput();
+    resetRobotNumberInput();
+    resetCokeInput();
+    resetJokeInput();
+    // setColor(''); // how to reset to original?
+    onUncheckAllCheckBoxes();
+    resetCountriesInput();
+    setDurians(true);
+  };
+
   const onSubmitHandler = (event: React.FormEvent<HTMLFormElement>): void => {
     event.preventDefault();
 
@@ -227,16 +239,7 @@ const CreateRobotForm: React.FC = () => {
       }),
     });
 
-    resetNicknameInput();
-    resetEmailInput();
-    resetRobotNumberInput();
-    resetCokeInput();
-    resetJokeInput();
-    setColor(''); // how to reset to original?
-    // selectColorInputRef.current.select.clearValue();
-    onUncheckAllCheckBoxes();
-    resetCountriesInput();
-    setDurians(true);
+    resetForm();
 
     history.push('/robots');
   };
@@ -358,7 +361,7 @@ const CreateRobotForm: React.FC = () => {
             <br />
             {tvSeriesError && (
               <Form.Text className='text-danger'>
-                C'mon, choose at least 1 Tv Programme
+                C'mon, choose at least 1 TV Programme
               </Form.Text>
             )}
           </Form.Group>
@@ -458,6 +461,14 @@ const CreateRobotForm: React.FC = () => {
             className='mb-2'
           >
             Create Robot 🤖
+          </Button>
+          <Button
+            variant='info'
+            type='reset'
+            className='mb-2 mx-2'
+            onClick={resetForm}
+          >
+            Reset Form 📃
           </Button>
         </Form>
       </FormStyled>

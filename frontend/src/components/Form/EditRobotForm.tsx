@@ -93,6 +93,12 @@ const EditRobotForm: React.FC = () => {
   const nicknameInputHasError = !nicknameInputIsValid;
   const nicknameLengthBelow10 = nickname.length <= 10;
 
+  const emailChangeHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setEmail(event.target.value);
+  };
+  const emailIsValid = email.includes('@');
+  const emailInputHasError = !emailIsValid;
+
   const robotNumberChangeHandler = (
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
@@ -101,25 +107,6 @@ const EditRobotForm: React.FC = () => {
   const robotNumberIsValid =
     +robotNumber >= 1 && +robotNumber <= 1000 && !robotNumber.includes('.');
   const robotNumberInputHasError = !robotNumberIsValid;
-
-  const emailChangeHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setEmail(event.target.value);
-  };
-  const emailIsValid = email.includes('@');
-  const emailInputHasError = !emailIsValid;
-
-  const cokeChangeHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setCoke(event.target.value);
-  };
-  const cokeIsValid = +coke > 0 && +coke <= 30;
-  const cokeInputHasError = coke === '' || !cokeIsValid;
-  const cokeIsOverPriced = +coke > 30;
-
-  const jokeChangeHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setJoke(event.target.value);
-  };
-  const jokeInputHasError = joke.trim() === '';
-  const jokeNotTooLong = joke.length <= 200;
 
   const onColorChangeHandler = (
     event: React.ChangeEvent<HTMLSelectElement>
@@ -130,6 +117,13 @@ const EditRobotForm: React.FC = () => {
   const colorHasError = !colorIsValid;
 
   // TV series
+  let tvSeriesArray: string[] = [];
+  for (let key in tvSeries) {
+    if (tvSeries[key] === true) {
+      tvSeriesArray.push(key);
+    }
+  }
+
   const onCheckBoxChange = (
     event: React.ChangeEvent<HTMLInputElement>
   ): void => {
@@ -160,6 +154,19 @@ const EditRobotForm: React.FC = () => {
   );
   const tvSeriesMinimumOneChecked = Object.keys(checkedTvSeries).length > 0;
 
+  const cokeChangeHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setCoke(event.target.value);
+  };
+  const cokeIsValid = +coke > 0 && +coke <= 30;
+  const cokeInputHasError = coke === '' || !cokeIsValid;
+  const cokeIsOverPriced = +coke > 30;
+
+  const jokeChangeHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setJoke(event.target.value);
+  };
+  const jokeInputHasError = joke.trim() === '';
+  const jokeNotTooLong = joke.length <= 200;
+
   const countriesChangeHandler = (
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
@@ -168,6 +175,19 @@ const EditRobotForm: React.FC = () => {
   const countriesIsValid =
     +countries >= 1 && +countries <= 195 && !countries.includes('.');
   const countriesInputHasError = countries === '' || !countriesIsValid;
+
+  // check validity for entire entire form
+  let formIsValid = false;
+  if (
+    !nicknameInputHasError &&
+    nicknameLengthBelow10 &&
+    emailIsValid &&
+    robotNumberIsValid &&
+    colorIsValid &&
+    tvSeriesMinimumOneChecked
+  ) {
+    formIsValid = true;
+  }
 
   const onSubmitHandler = (event: React.FormEvent<HTMLFormElement>): void => {
     event.preventDefault();
@@ -180,13 +200,6 @@ const EditRobotForm: React.FC = () => {
         tvSeriesHasError = true;
       }
     })();
-
-    let tvSeriesArray = [];
-    for (let key in tvSeries) {
-      if (tvSeries[key] === true) {
-        tvSeriesArray.push(key);
-      }
-    }
 
     // send to browser
     const editedRobot = {
@@ -303,6 +316,7 @@ const EditRobotForm: React.FC = () => {
                 Was '{capitalizedFirstLetter(mongoDbRobot['favourite-color'])}'.
                 Do you want to pick another one?
               </Form.Text>
+              <br />
               {colorHasError && (
                 <Form.Text className='text-danger'>Choose a color</Form.Text>
               )}
@@ -344,13 +358,13 @@ const EditRobotForm: React.FC = () => {
                 Deselect All
               </Button>
               <br />
-              {tvSeriesError && (
+              {(tvSeriesError || !tvSeriesMinimumOneChecked) && (
                 <Form.Text className='text-danger'>
                   C'mon, choose at least 1 TV Programme
                 </Form.Text>
               )}
             </Form.Group>
-            <Form.Group className='mb-4'>
+            {/* <Form.Group className='mb-4'>
               <Form.Label>
                 How much is a can of Coke 🥫 in your country?
               </Form.Label>
@@ -373,8 +387,8 @@ const EditRobotForm: React.FC = () => {
                   🥴 Does it cost THAT much?
                 </Form.Text>
               )}
-            </Form.Group>
-            <Form.Group className='mb-4'>
+            </Form.Group> */}
+            {/* <Form.Group className='mb-4'>
               <Form.Label>Tell me a joke! 🤣</Form.Label>
               <Form.Control
                 as='textarea'
@@ -391,9 +405,8 @@ const EditRobotForm: React.FC = () => {
                   Shorter joke below 200 characters please
                 </Form.Text>
               )}
-            </Form.Group>
-
-            <Form.Group className='mb-4'>
+            </Form.Group> */}
+            {/* <Form.Group className='mb-4'>
               <Form.Label>How many countries have you visited?</Form.Label>
               <Form.Control
                 type='number'
@@ -408,8 +421,8 @@ const EditRobotForm: React.FC = () => {
                   There are 195 countries in the world
                 </Form.Text>
               )}
-            </Form.Group>
-            <Form.Group className='mb-4'>
+            </Form.Group> */}
+            {/* <Form.Group className='mb-4'>
               <Form.Label>Do you agree durians smell good? 💚</Form.Label>
               <br />
               <Form.Check.Label>
@@ -430,11 +443,16 @@ const EditRobotForm: React.FC = () => {
                   setter={setDurians}
                 />
               </Form.Check.Label>
-            </Form.Group>
-            <Button variant='warning' type='submit' className='mb-2 mx-2'>
+            </Form.Group> */}
+            <Button
+              variant='warning'
+              type='submit'
+              className='mb-2'
+              disabled={!formIsValid}
+            >
               Save Robot 🤖
             </Button>
-            <Button variant='info' type='button' className='mb-2'>
+            <Button variant='info' type='button' className='mb-2 mx-2'>
               <GoBackButtonStyled>
                 <Link to='/robots'>Go back ⬅️</Link>
               </GoBackButtonStyled>
