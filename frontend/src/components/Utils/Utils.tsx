@@ -50,3 +50,7 @@ export const convertNewDateToDisplay = (newdate: string): string => {
 
   return `${date} ${monthWord} ${year}`;
 };
+
+export const displaysTwoDecimalPlaces = (item: string | number): string => {
+  return Number(item).toFixed(2);
+};

@@ -106,8 +106,7 @@ const EditRobotForm: React.FC = () => {
   ) => {
     setRobotNumber(event.target.value);
   };
-  const robotNumberIsValid =
-    +robotNumber >= 1 && +robotNumber <= 1000 && !robotNumber.includes('.');
+  const robotNumberIsValid = +robotNumber >= 1 && +robotNumber <= 1000;
   const robotNumberInputHasError = !robotNumberIsValid;
 
   const onColorChangeHandler = (
@@ -175,8 +174,7 @@ const EditRobotForm: React.FC = () => {
   ) => {
     setCountries(event.target.value);
   };
-  const countriesIsValid =
-    +countries >= 1 && +countries <= 195 && !countries.includes('.');
+  const countriesIsValid = +countries >= 1 && +countries <= 195;
   const countriesInputHasError = countries === '' || !countriesIsValid;
 
   // check validity for entire entire form
@@ -211,12 +209,12 @@ const EditRobotForm: React.FC = () => {
   const onSubmitHandler = (event: React.FormEvent<HTMLFormElement>): void => {
     event.preventDefault();
 
-    let tvSeriesHasError = false;
+    // let tvSeriesHasError = false;
     // IIFE - immediately invoked function expression
     (function () {
       if (!tvSeriesMinimumOneChecked) {
         setTvSeriesError(true);
-        tvSeriesHasError = true;
+        // tvSeriesHasError = true;
       }
     })();
 
@@ -224,12 +222,12 @@ const EditRobotForm: React.FC = () => {
     const editedRobot = {
       nickname,
       email,
-      robotNumber,
+      robotNumber: Number(robotNumber),
       'favourite-color': color,
       'favourite-series': tvSeriesArray,
       coke,
       joke,
-      countries,
+      countries: Number(countries),
       durians,
       likes,
     };
@@ -244,12 +242,12 @@ const EditRobotForm: React.FC = () => {
       body: JSON.stringify({
         nickname,
         email,
-        robotNumber,
+        robotNumber: Number(robotNumber),
         'favourite-color': color,
         'favourite-series': tvSeriesArray,
         coke,
         joke,
-        countries,
+        countries: Number(countries),
         durians,
         likes,
       }),

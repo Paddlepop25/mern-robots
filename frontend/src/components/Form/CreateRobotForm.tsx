@@ -33,7 +33,6 @@ const CreateRobotForm: React.FC = () => {
   const [tvSeries, setTvSeries] = useState(tvSeriesState);
   const [tvSeriesError, setTvSeriesError] = useState(false);
 
-  // const selectColorInputRef = useRef<HTMLButtonElement>(null);
   const colorIsValid = color !== 'Colors of the Rainbow';
   const colorHasError = !colorIsValid && colorIsTouched;
 
@@ -121,7 +120,7 @@ const CreateRobotForm: React.FC = () => {
     onValueChangeHandler: emailChangeHandler,
     onValueBlurHandler: emailBlurHandler,
     reset: resetEmailInput,
-  } = useInput((value) => value.includes('@'));
+  } = useInput((value) => value.includes('@') && value.includes('.'));
 
   const {
     value: enteredCoke,
@@ -209,12 +208,12 @@ const CreateRobotForm: React.FC = () => {
     const newRobot = {
       nickname: enteredNickname,
       email: enteredEmail,
-      robotNumber: enteredRobotNumber,
+      robotNumber: Number(enteredRobotNumber),
       'favourite-color': color,
       'favourite-series': tvSeriesArray,
       coke: enteredCoke,
       joke: enteredJoke,
-      countries: enteredCountries,
+      countries: Number(enteredCountries),
       durians,
     };
     console.clear();
@@ -228,12 +227,12 @@ const CreateRobotForm: React.FC = () => {
       body: JSON.stringify({
         nickname: enteredNickname,
         email: enteredEmail,
-        robotNumber: enteredRobotNumber,
+        robotNumber: Number(enteredRobotNumber),
         'favourite-color': color,
         'favourite-series': tvSeriesArray,
         coke: enteredCoke,
         joke: enteredJoke,
-        countries: enteredCountries,
+        countries: Number(enteredCountries),
         durians,
       }),
     });
@@ -370,7 +369,7 @@ const CreateRobotForm: React.FC = () => {
             </Form.Label>
             <Form.Control
               type='number'
-              placeholder='1.20'
+              placeholder='1.2'
               onChange={cokeChangeHandler}
               onBlur={cokeBlurHandler}
               value={enteredCoke}

@@ -4,19 +4,19 @@ import { Link } from 'react-router-dom';
 import { LikesStyled, RobotsStyled } from './Robots.styles';
 
 export interface RobotType {
-  coke: number;
-  countries: number;
-  durians: true;
+  _id: string;
+  timestamp: string;
+  nickname: string;
   email: string;
+  robotNumber: number;
+  robotUrl: string;
   'favourite-color': string;
   'favourite-series': string[];
+  coke: number;
   joke: string;
+  countries: number;
+  durians: boolean;
   likes: number;
-  nickname: string;
-  robotUrl: string;
-  robotNumber: string;
-  timestamp: string;
-  _id: string;
 }
 
 const Favourites: React.FC = (): React.ReactElement => {
