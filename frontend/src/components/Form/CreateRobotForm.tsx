@@ -240,6 +240,7 @@ const CreateRobotForm: React.FC = () => {
     resetForm();
 
     history.push('/robots');
+    window.location.reload();
   };
 
   return (

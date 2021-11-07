@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Button, Col, Container, Row } from 'react-bootstrap';
 import { useParams, useHistory } from 'react-router-dom';
 import { RobotType } from '../../Pages/Robots';
+import { DeleteModal } from '../DeleteModal/DeleteModal';
 import {
   capitalizedFirstLetter,
   capitalizedFirstLetterOfEveryWord,
@@ -17,12 +18,13 @@ export interface NickNameType {
   nickname: string;
 }
 
-const RobotDetails: React.FC = () => {
+const RobotDetails = () => {
   const history = useHistory();
   const getRobotParams = useParams<NickNameType>();
   const robotNickname = getRobotParams['nickname'];
 
   const [robot, setRobot] = useState<RobotType>();
+  const [showModal, setShowModal] = React.useState(false);
 
   useEffect(() => {
     const getRobot = async () => {
@@ -41,12 +43,18 @@ const RobotDetails: React.FC = () => {
     history.push(`/editform/${robotNickname}`);
   };
 
-  const onDeleteHandler = async () => {
-    // create modal
+  const onDeleteHandler = () => {
+    setShowModal(true);
+  };
+
+  const handleCloseModal = () => {
+    setShowModal(false);
+  };
+
+  const confirmDeleteRobot = async () => {
     const response = await fetch(`/robots/${robotNickname}/delete`, {
       method: 'DELETE',
     });
-
     if (response.status === 200) {
       history.push('/robots');
     }
@@ -133,6 +141,12 @@ const RobotDetails: React.FC = () => {
                     Delete
                   </Button>
                 </ButtonsStyled>
+                <DeleteModal
+                  showModal={showModal}
+                  handleCloseModal={handleCloseModal}
+                  nickname={robotNickname}
+                  confirmDeleteRobot={confirmDeleteRobot}
+                />
               </Col>
             </Row>
           </Container>
