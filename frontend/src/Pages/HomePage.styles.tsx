@@ -14,6 +14,10 @@ export const HomePageStyled = styled.div`
 
   @media only screen and (max-width: 520px) {
     padding: 1rem;
+
+    button {
+      width: 100%;
+    }
   }
 `;
 

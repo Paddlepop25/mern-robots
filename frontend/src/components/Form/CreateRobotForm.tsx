@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Button, Container, Form } from 'react-bootstrap';
 import { useHistory } from 'react-router-dom';
 import { useInput } from '../../customHooks/useInput';
-import { FormStyled } from './CreateRobotForm.styles';
+import { ButtonsStyled, FormStyled } from './CreateRobotForm.styles';
 import { RadioInput } from './RadioInput';
 import { TVSERIES } from './TvSeries.data';
 
@@ -28,12 +28,12 @@ const tvSeriesState: { [key: string]: boolean } = {
 const CreateRobotForm: React.FC = () => {
   const history = useHistory();
   const [durians, setDurians] = React.useState(true);
-  const [color, setColor] = useState('Colors of the Rainbow');
+  const [color, setColor] = useState('Pick a Rainbow Color');
   const [colorIsTouched, setColorIsTouched] = useState(false);
   const [tvSeries, setTvSeries] = useState(tvSeriesState);
   const [tvSeriesError, setTvSeriesError] = useState(false);
 
-  const colorIsValid = color !== 'Colors of the Rainbow';
+  const colorIsValid = color !== 'Pick a Rainbow Color';
   const colorHasError = !colorIsValid && colorIsTouched;
 
   // select color
@@ -308,7 +308,7 @@ const CreateRobotForm: React.FC = () => {
               onBlur={onColorBlurHandler}
               // ref={selectColorInputRef}
             >
-              <option>Colors of the Rainbow</option>
+              <option>Pick a Rainbow Color</option>
               <option value='red'>Red</option>
               <option value='orange'>Orange</option>
               <option value='yellow'>Yellow</option>
@@ -453,22 +453,24 @@ const CreateRobotForm: React.FC = () => {
               />
             </Form.Check.Label>
           </Form.Group>
-          <Button
-            variant='warning'
-            type='submit'
-            disabled={!formIsValid}
-            className='mb-2'
-          >
-            Create Robot 🤖
-          </Button>
-          <Button
-            variant='info'
-            type='reset'
-            className='mb-2 mx-2'
-            onClick={resetForm}
-          >
-            Reset Form 📃
-          </Button>
+          <ButtonsStyled>
+            <Button
+              variant='warning'
+              type='submit'
+              disabled={!formIsValid}
+              className='mb-2'
+            >
+              Create Robot 🤖
+            </Button>
+            <Button
+              variant='info'
+              type='reset'
+              className='mb-2'
+              onClick={resetForm}
+            >
+              Reset Form 📃
+            </Button>
+          </ButtonsStyled>
         </Form>
       </FormStyled>
     </Container>

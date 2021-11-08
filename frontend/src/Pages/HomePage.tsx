@@ -57,7 +57,6 @@ const HomePage: React.FC = () => {
           all robots 🤖
         </p>
         <br />
-
         <Button
           variant='info'
           className='capitalize mx-1'

@@ -8,7 +8,7 @@ import {
   capitalizedFirstLetterOfEveryWord,
 } from '../Utils/Utils';
 import { FormStyled } from './CreateRobotForm.styles';
-import { GoBackButtonStyled } from './EditRobotForm.styles';
+import { ButtonsStyled } from './EditRobotForm.styles';
 import { RadioInput } from './RadioInput';
 import { TVSERIES } from './TvSeries.data';
 
@@ -114,7 +114,7 @@ const EditRobotForm: React.FC = () => {
   ) => {
     setColor(event.target.value);
   };
-  const colorIsValid = color !== 'Colors of the Rainbow';
+  const colorIsValid = color !== 'Pick a Rainbow Color';
   const colorHasError = !colorIsValid;
 
   // TV series
@@ -316,7 +316,7 @@ const EditRobotForm: React.FC = () => {
             <Form.Group className='mb-4'>
               <Form.Label>Pick your favourite color 🌈</Form.Label>
               <Form.Select onChange={onColorChangeHandler}>
-                <option>Colors of the Rainbow</option>
+                <option>Pick a Rainbow Color</option>
                 <option value='red'>Red</option>
                 <option value='orange'>Orange</option>
                 <option value='yellow'>Yellow</option>
@@ -457,19 +457,19 @@ const EditRobotForm: React.FC = () => {
                 />
               </Form.Check.Label>
             </Form.Group>
-            <Button
-              variant='warning'
-              type='submit'
-              className='mb-2'
-              disabled={!formIsValid}
-            >
-              Save Robot 🤖
-            </Button>
-            <Button variant='info' type='button' className='mb-2 mx-2'>
-              <GoBackButtonStyled>
+            <ButtonsStyled>
+              <Button
+                variant='warning'
+                type='submit'
+                className='mb-2'
+                disabled={!formIsValid}
+              >
+                Save Robot 🤖
+              </Button>
+              <Button variant='info' type='button' className='mb-2'>
                 <Link to='/robots'>Go back ⬅️</Link>
-              </GoBackButtonStyled>
-            </Button>
+              </Button>
+            </ButtonsStyled>
           </Form>
         </FormStyled>
       )}
