@@ -7,10 +7,8 @@ import Favourites from './Pages/Robots';
 import HomePage from './Pages/HomePage';
 import PageNotFound from './Pages/PageNotFound';
 import RobotDetails from './components/RobotDetails/RobotDetails';
-import RobotDelete from './components/RobotDelete/RobotDelete';
 import EditRobotForm from './components/Form/EditRobotForm';
 import Footer from './components/Footer/Footer';
-import { Container } from 'react-bootstrap';
 
 function App() {
   return (
@@ -24,7 +22,6 @@ function App() {
               <Route path='/form' component={CreateRobotForm} />
               <Route path='/editform/:nickname' component={EditRobotForm} />
               <Route path='/robots/:nickname' component={RobotDetails} />
-              <Route path='/robots/:nickname/delete' component={RobotDelete} />
               <Route path='/robots' component={Favourites} />
               <Route component={PageNotFound} />
             </Switch>

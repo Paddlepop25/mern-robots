@@ -33,10 +33,16 @@ const Footer = () => {
                 >
                   <FaGithub />
                 </a>
-                <a href='https://www.google.com' target='_blank'>
+                <a
+                  href='https://www.linkedin.com/in/lindahsu007/'
+                  target='_blank'
+                >
                   <FaLinkedin />
                 </a>
-                <a href='https://www.google.com' target='_blank'>
+                <a
+                  href='https://www.instagram.com/shecodeshsucodes/'
+                  target='_blank'
+                >
                   <FaInstagramSquare />
                 </a>
               </FooterIconStyled>

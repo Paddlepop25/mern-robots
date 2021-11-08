@@ -6,7 +6,7 @@ import { ButtonsStyled, FormStyled } from './CreateRobotForm.styles';
 import { RadioInput } from './RadioInput';
 import { TVSERIES } from './TvSeries.data';
 
-// stackoverflow.com/questions/57667198/typescript-error-type-string-cant-be-used-to-index-type-x/57667278#57667278
+// see README for link to Stack Overflow
 // !Typescript Indexable Type
 const tvSeriesState: { [key: string]: boolean } = {
   // !Typescript Utility Type
@@ -50,7 +50,6 @@ const CreateRobotForm: React.FC = () => {
 
   // select tv series
   let tvSeriesArray: string[] = [];
-  // https://stackoverflow.com/questions/57667198/typescript-error-type-string-cant-be-used-to-index-type-x/57667278#57667278
   // !using Typescript Indexable types
   for (let key in tvSeries) {
     // !using Typescript Utility type
@@ -91,6 +90,7 @@ const CreateRobotForm: React.FC = () => {
   );
   const tvSeriesMinimumOneChecked = Object.keys(checkedTvSeries).length > 0;
 
+  // using custom React hook
   // hasError: nicknameInputHasError <-- this is giving an alias; renaming hasError
   const {
     value: enteredNickname,
@@ -151,7 +151,7 @@ const CreateRobotForm: React.FC = () => {
     reset: resetCountriesInput,
   } = useInput((value) => +value >= 1 && +value <= 195 && !value.includes('.'));
 
-  // check validity for entire entire form
+  // check validity for entire form to display button
   let formIsValid = false;
   if (
     enteredNickname &&
@@ -161,7 +161,6 @@ const CreateRobotForm: React.FC = () => {
     enteredJoke &&
     jokeNotTooLong &&
     colorIsValid &&
-    // tvSeriesMinimumOneChecked &&
     enteredCountries
   ) {
     formIsValid = true;
@@ -205,20 +204,6 @@ const CreateRobotForm: React.FC = () => {
     }
 
     // send to browser
-    const newRobot = {
-      nickname: enteredNickname,
-      email: enteredEmail,
-      robotNumber: Number(enteredRobotNumber),
-      'favourite-color': color,
-      'favourite-series': tvSeriesArray,
-      coke: enteredCoke,
-      joke: enteredJoke,
-      countries: Number(enteredCountries),
-      durians,
-    };
-    console.clear();
-    console.log(newRobot);
-
     fetch('/robots/newrobot', {
       method: 'POST',
       headers: {
@@ -306,7 +291,6 @@ const CreateRobotForm: React.FC = () => {
             <Form.Select
               onChange={onColorChangeHandler}
               onBlur={onColorBlurHandler}
-              // ref={selectColorInputRef}
             >
               <option>Pick a Rainbow Color</option>
               <option value='red'>Red</option>
@@ -379,7 +363,6 @@ const CreateRobotForm: React.FC = () => {
               step='0.10'
             />
             {/* <Form.Range min='0.1' max='10' step='0.1' /> */}
-            {/* <p>SGD$ value</p> */}
             {cokeInputHasError && (
               <Form.Text className='text-danger'>
                 Please enter a valid number

@@ -12,7 +12,7 @@ import { ButtonsStyled } from './EditRobotForm.styles';
 import { RadioInput } from './RadioInput';
 import { TVSERIES } from './TvSeries.data';
 
-// stackoverflow.com/questions/57667198/typescript-error-type-string-cant-be-used-to-index-type-x/57667278#57667278
+// see README for link to Stack Overflow
 // !Typescript Indexable Type
 const tvSeriesState: { [key: string]: boolean } = {
   // !Typescript Utility Type
@@ -198,7 +198,6 @@ const EditRobotForm: React.FC = () => {
     setNickname('');
     setEmail('');
     setRobotNumber('');
-    // setColor('');
     onUncheckAllCheckBoxes();
     setCoke('');
     setJoke('');
@@ -209,12 +208,10 @@ const EditRobotForm: React.FC = () => {
   const onSubmitHandler = (event: React.FormEvent<HTMLFormElement>): void => {
     event.preventDefault();
 
-    // let tvSeriesHasError = false;
     // IIFE - immediately invoked function expression
     (function () {
       if (!tvSeriesMinimumOneChecked) {
         setTvSeriesError(true);
-        // tvSeriesHasError = true;
       }
     })();
 
@@ -270,7 +267,6 @@ const EditRobotForm: React.FC = () => {
               <Form.Control
                 type='text'
                 onChange={nicknameChangeHandler}
-                // value={capitalizedFirstLetterOfEveryWord(nickname)}
                 value={capitalizedFirstLetterOfEveryWord(nickname)}
               />
               {nicknameInputHasError && (

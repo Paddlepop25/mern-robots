@@ -1,7 +1,5 @@
 import styled from 'styled-components';
 
-// https://www.freecodecamp.org/news/how-to-keep-your-footer-where-it-belongs-59c6aa05c59c/
-
 export const FooterStyled = styled.footer`
   background: #f78193;
   width: 100%;
