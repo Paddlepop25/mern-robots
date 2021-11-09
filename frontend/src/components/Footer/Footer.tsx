@@ -30,18 +30,21 @@ const Footer = () => {
                 <a
                   href='https://github.com/Paddlepop25/mern-robots'
                   target='_blank'
+                  rel='noopener noreferrer'
                 >
                   <FaGithub />
                 </a>
                 <a
                   href='https://www.linkedin.com/in/lindahsu007/'
                   target='_blank'
+                  rel='noopener noreferrer'
                 >
                   <FaLinkedin />
                 </a>
                 <a
                   href='https://www.instagram.com/shecodeshsucodes/'
                   target='_blank'
+                  rel='noopener noreferrer'
                 >
                   <FaInstagramSquare />
                 </a>

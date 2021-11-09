@@ -36,6 +36,10 @@ Robot image API
 
 - https://robohash.org/
 
+JSON format checker
+
+- https://www.jsonlint.com/
+
 ## Resources
 
 Typescript errors
@@ -48,6 +52,19 @@ Indexable type vs Utility type
 Refresh page
 
 - https://reactgo.com/react-refresh-page/
+
+Memory leaks
+
+> Warning: Can't perform a React state update on an unmounted component. THis is a no-op, but it indicates a memory leak in your application.
+
+- https://www.debuggr.io/react-update-unmounted-component/
+- https://dev.to/jexperton/how-to-fix-the-react-memory-leak-warning-d4i
+
+Console warning for using <code>target="\_blank"</code> in Footer link
+
+> Using target="\_blank" without rel="noreferrer" (which implies rel="noopener") is a security risk in older browsers: see https://mathiasbynens.github.io/rel-noopener/#recommendations
+
+- https://stackoverflow.com/questions/57628890/why-people-use-rel-noopener-noreferrer-instead-of-just-rel-noreferrer
 
 Get various year/month/datetime
 
@@ -80,23 +97,33 @@ How to do a 'PUT' request with data
 
 - https://docs.mongodb.com/manual/reference/operator/update/set/
 
+How to export JSON from local
+
+- https://stackoverflow.com/questions/28733692/how-to-export-json-from-mongodb-using-robomongo
+
+How to import JSON from local to MongoDB Atlas (Cloud)
+
+- https://docs.atlas.mongodb.com/import/mongoimport/
+- https://database.guide/import-documents-into-mongodb-from-an-array-of-json-documents/
+
 ## Work In Progress & Future Enhancements
 
 _(in no particular order)_
 
-- move local MongoDB to Cloud
-- build React package, serve on Express
-- deploy Robots to Heroku
-- write unit tests
-- add notes to README.md
-- fix robot cards to be responsive
-- add React Memo
-- colour dropdown in EditForm to be populated
-- change from nickname to robot \_id to do PUT/DELETE requests
-- add art from Art Institute Chicago API -> https://www.artic.edu/open-access/public-api
-- add a simple robot game -> word guess / match robot / etc
-- add slider to create/edit form for $coke 🥫
-- add Redux / Redux saga for actions/reducers to change state
-- refine the 'page not found' page
-- break up create/edit form to more components
-- write custom hook for edit form
+- [x] move local MongoDB to Cloud
+- [x] add Spinner for when API is not loaded
+- [] build React package, serve on Express
+- [] deploy Robots to Heroku
+- [] write unit tests
+- [x] add notes to README.md
+- [] fix robot cards to be responsive
+- [] add React Memo
+- [] colour dropdown in EditForm to be populated
+- [] change from nickname to robot \_id to do PUT/DELETE requests
+- [] add art from Art Institute Chicago API -> https://www.artic.edu/open-access/public-api
+- [] add a simple robot game -> word guess / match robot / etc
+- [] add slider to create/edit form for $coke 🥫
+- [] add Redux / Redux saga for actions/reducers to change state
+- [x] refine the 'page not found' page
+- [] break up create/edit form to more components
+- [] write custom hook for edit form

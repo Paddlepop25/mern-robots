@@ -6,10 +6,13 @@ const MongoClient = require('mongodb').MongoClient;
 const app = express();
 
 const PORT = process.env.PORT || 8000;
-const MONGO_URL = process.env.MONGO_URL;
-const MONGO_DB = process.env.MONGO_DB;
+// const MONGO_LOCAL = process.env.MONGO_LOCAL;
+// const MONGO_LOCAL_DB = process.env.MONGO_LOCAL_DB;
+const MONGO_CLOUD = process.env.MONGO_CLOUD;
+const MONGO_CLOUD_DB = process.env.MONGO_CLOUD_DB;
 // connection pool
-const mongoClient = new MongoClient(MONGO_URL, {
+// const mongoClient = new MongoClient(MONGO_LOCAL, {
+const mongoClient = new MongoClient(MONGO_CLOUD, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 });
@@ -17,8 +20,10 @@ const mongoClient = new MongoClient(MONGO_URL, {
 // connect to MongoDBß
 const connectToMongoDB = async (operations, res) => {
   try {
-    const client = await MongoClient.connect(MONGO_URL);
-    const db = client.db(MONGO_DB);
+    // const client = await MongoClient.connect(MONGO_LOCAL);
+    // const db = client.db(MONGO_LOCAL_DB);
+    const client = await MongoClient.connect(MONGO_CLOUD);
+    const db = client.db(MONGO_CLOUD_DB);
     await operations(db);
     client.close();
   } catch (error) {
@@ -33,7 +38,7 @@ const trimAndLowerCaseFn = (input) => {
 };
 
 // create body object
-const mkMyFavourites = (params) => {
+const makeRobot = (params) => {
   return {
     timestamp: new Date(),
     nickname: trimAndLowerCaseFn(params.nickname),
@@ -103,7 +108,7 @@ app.post('/robots/newrobot', async (req, res) => {
   };
 
   try {
-    const newRobot = mkMyFavourites(robotInfo);
+    const newRobot = makeRobot(robotInfo);
     console.log('>>>> NEW ROBOT >>>> ', newRobot);
     connectToMongoDB(async (db) => {
       const dbNickname = await db
@@ -175,7 +180,7 @@ app.put('/robots/:nickname/edit', async (req, res) => {
     durians,
     likes,
   };
-  const newRobot = mkMyFavourites(robotInfo);
+  const newRobot = makeRobot(robotInfo);
 
   connectToMongoDB(async (db) => {
     const dbNickname = await db

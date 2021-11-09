@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { Button, Container, Form } from 'react-bootstrap';
+import { Button, Container, Form, Spinner } from 'react-bootstrap';
 import { useParams, useHistory, Link } from 'react-router-dom';
 import { RobotType } from '../../Pages/Robots';
+import { SpinnerStyled } from '../../Pages/Robots.styles';
 import { NickNameType } from '../RobotDetails/RobotDetails';
 import {
   capitalizedFirstLetter,
@@ -49,6 +50,7 @@ const EditRobotForm: React.FC = () => {
   const [countries, setCountries] = useState('');
   const [durians, setDurians] = useState(true);
   const [likes, setLikes] = useState(0);
+  const [statusCode200, setStatusCode200] = useState(false);
 
   useEffect(() => {
     const getRobot = async () => {
@@ -65,9 +67,10 @@ const EditRobotForm: React.FC = () => {
       setCountries(robot.countries);
       setDurians(robot.durians);
       setLikes(robot.likes);
+      setStatusCode200(true);
     };
     getRobot();
-    console.clear();
+    // console.clear();
   }, []);
 
   useEffect(() => {
@@ -215,22 +218,22 @@ const EditRobotForm: React.FC = () => {
       }
     })();
 
-    // send to browser
-    const editedRobot = {
-      nickname,
-      email,
-      robotNumber: Number(robotNumber),
-      'favourite-color': color,
-      'favourite-series': tvSeriesArray,
-      coke,
-      joke,
-      countries: Number(countries),
-      durians,
-      likes,
-    };
-    console.clear();
-    console.log(editedRobot);
+    // const editedRobot = {
+    //   nickname,
+    //   email,
+    //   robotNumber: Number(robotNumber),
+    //   'favourite-color': color,
+    //   'favourite-series': tvSeriesArray,
+    //   coke,
+    //   joke,
+    //   countries: Number(countries),
+    //   durians,
+    //   likes,
+    // };
+    // console.clear();
+    // console.log(editedRobot);
 
+    // send to browser
     fetch(`/robots/${robotNickname}/edit`, {
       method: 'PUT',
       headers: {
@@ -254,10 +257,20 @@ const EditRobotForm: React.FC = () => {
     resetForm();
 
     history.push(`/robots/${nickname}`);
+
+    // disable for local mongoDB
+    // must enable if use MongoDB on cloud if not, hang
+    // sometimes will have flash
+    window.location.reload();
   };
 
   return (
     <Container>
+      {!statusCode200 && (
+        <SpinnerStyled>
+          <Spinner animation='border' variant='danger' />
+        </SpinnerStyled>
+      )}
       {mongoDbRobot && (
         <FormStyled>
           <Form onSubmit={onSubmitHandler}>

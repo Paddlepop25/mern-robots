@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import { Button, Col, Container, Row } from 'react-bootstrap';
+import { Button, Col, Container, Row, Spinner } from 'react-bootstrap';
 import { useParams, useHistory } from 'react-router-dom';
 import { RobotType } from '../../Pages/Robots';
+import { SpinnerStyled } from '../../Pages/Robots.styles';
 import { DeleteModal } from '../DeleteModal/DeleteModal';
 import {
   capitalizedFirstLetter,
@@ -24,6 +25,7 @@ const RobotDetails = () => {
   const robotNickname = getRobotParams['nickname'];
 
   const [robot, setRobot] = useState<RobotType>();
+  const [statusCode200, setSetStatusCode200] = useState(false);
   const [showModal, setShowModal] = React.useState(false);
 
   useEffect(() => {
@@ -31,9 +33,10 @@ const RobotDetails = () => {
       const results = await fetch(`/robots/${robotNickname}`);
       const response = await results.json();
       setRobot(response);
+      setSetStatusCode200(true);
     };
     getRobot();
-  }, []);
+  }, [robotNickname]);
 
   const onBackHandler = () => {
     history.push('/robots');
@@ -62,6 +65,11 @@ const RobotDetails = () => {
 
   return (
     <>
+      {!statusCode200 && (
+        <SpinnerStyled>
+          <Spinner animation='border' variant='danger' />
+        </SpinnerStyled>
+      )}
       {robot && (
         <RobotDetailsStyled>
           <Container>

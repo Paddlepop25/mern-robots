@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Button, Card, Col, Container, Row, Spinner } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
-import { LikesStyled, RobotsStyled } from './Robots.styles';
+import { RobotsStyled, SpinnerStyled, LikesStyled } from './Robots.styles';
 
 export interface RobotType {
   _id: string;
@@ -19,14 +19,16 @@ export interface RobotType {
   likes: number;
 }
 
-const Favourites: React.FC = (): React.ReactElement => {
+const Robots: React.FC = (): React.ReactElement => {
   const [robots, setRobots] = useState<RobotType[]>([]);
+  const [statusCode200, setStatusCode200] = useState(false);
 
   useEffect(() => {
     const getRobots = async () => {
       const results = await fetch('/robots');
       const response = await results.json();
       setRobots(response);
+      setStatusCode200(true);
     };
     getRobots();
   }, []);
@@ -42,12 +44,16 @@ const Favourites: React.FC = (): React.ReactElement => {
   return (
     <RobotsStyled>
       <Container>
-        {!robots && <Spinner animation='border' variant='danger' />}
+        {!statusCode200 && (
+          <SpinnerStyled>
+            <Spinner animation='border' variant='danger' />
+          </SpinnerStyled>
+        )}
         <Row>
           {robots &&
             robots.map((robot) => (
               <Col xs={12} md={6} lg={3} key={robot._id}>
-                <Card style={{ width: '18rem', background: '#ffcce6' }}>
+                <Card>
                   <Card.Img variant='top' src={robot.robotUrl} />
                   <Card.Body>
                     <Link to={`/robots/${robot.nickname}`}>
@@ -77,4 +83,4 @@ const Favourites: React.FC = (): React.ReactElement => {
   );
 };
 
-export default Favourites;
+export default Robots;

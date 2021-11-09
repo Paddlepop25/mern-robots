@@ -225,6 +225,9 @@ const CreateRobotForm: React.FC = () => {
     resetForm();
 
     history.push('/robots');
+
+    // disable for local mongoDB
+    // sometimes will have flash
     window.location.reload();
   };
 

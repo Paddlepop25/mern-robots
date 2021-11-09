@@ -4,6 +4,7 @@ import {
   AdageAnswerStyled,
   AdageQuoteStyled,
   CodeStyled,
+  SpinnerStyled,
   HomePageStyled,
 } from './HomePage.styles';
 
@@ -44,7 +45,11 @@ const HomePage: React.FC = () => {
   };
 
   useEffect(() => {
+    let mounted = true;
     getRandomAdage();
+    return () => {
+      mounted = false;
+    };
   }, []);
 
   return (
@@ -71,7 +76,11 @@ const HomePage: React.FC = () => {
           !adage &&
           !adageQuestion &&
           !adageAnswer &&
-          !adageQuote && <Spinner animation='border' variant='danger' />}
+          !adageQuote && (
+            <SpinnerStyled>
+              <Spinner animation='border' variant='danger' />
+            </SpinnerStyled>
+          )}
         {adage && <h4>{adage}</h4>}
         {adageQuestion && <h4>{adageQuestion}</h4>}
         {adageAnswer && <AdageAnswerStyled>{adageAnswer}</AdageAnswerStyled>}

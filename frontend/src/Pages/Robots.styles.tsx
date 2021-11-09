@@ -5,6 +5,11 @@ export const RobotsStyled = styled.div`
     text-align: center;
   }
 
+  .card {
+    width: 18rem;
+    background: #ffcce6;
+  }
+
   .card-img-top {
     transition: transform 0.8s;
   }
@@ -24,6 +29,17 @@ export const RobotsStyled = styled.div`
 
   font-size: 1.2rem;
   border-radius: 1rem;
+
+  @media only screen and (max-width: 768px) {
+    .card {
+      margin: 0 auto;
+    }
+  }
+`;
+
+export const SpinnerStyled = styled.div`
+  text-align: center;
+  margin: 2rem;
 `;
 
 export const LikesStyled = styled.code`

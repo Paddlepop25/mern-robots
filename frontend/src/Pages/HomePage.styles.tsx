@@ -25,6 +25,10 @@ export const CodeStyled = styled.code`
   font-size: 1.5rem;
 `;
 
+export const SpinnerStyled = styled.div`
+  text-align: center;
+`;
+
 export const AdageAnswerStyled = styled.h5`
   font-style: italic;
 `;
