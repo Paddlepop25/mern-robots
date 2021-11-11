@@ -1,18 +1,20 @@
 require('dotenv').config();
 const morgan = require('morgan');
 const express = require('express');
+const path = require('path');
 const MongoClient = require('mongodb').MongoClient;
 
 const app = express();
+app.use(express.static(path.join(__dirname, '/src/build')));
 
 const PORT = process.env.PORT || 8000;
-// const MONGO_LOCAL = process.env.MONGO_LOCAL;
-// const MONGO_LOCAL_DB = process.env.MONGO_LOCAL_DB;
-const MONGO_CLOUD = process.env.MONGO_CLOUD;
-const MONGO_CLOUD_DB = process.env.MONGO_CLOUD_DB;
-// connection pool
-// const mongoClient = new MongoClient(MONGO_LOCAL, {
-const mongoClient = new MongoClient(MONGO_CLOUD, {
+const MONGO_LOCAL = process.env.MONGO_LOCAL;
+const MONGO_LOCAL_DB = process.env.MONGO_LOCAL_DB;
+// const MONGO_CLOUD = process.env.MONGO_CLOUD;
+// const MONGO_CLOUD_DB = process.env.MONGO_CLOUD_DB;
+// connection poolh
+const mongoClient = new MongoClient(MONGO_LOCAL, {
+  // const mongoClient = new MongoClient(MONGO_CLOUD, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 });
@@ -20,10 +22,10 @@ const mongoClient = new MongoClient(MONGO_CLOUD, {
 // connect to MongoDBß
 const connectToMongoDB = async (operations, res) => {
   try {
-    // const client = await MongoClient.connect(MONGO_LOCAL);
-    // const db = client.db(MONGO_LOCAL_DB);
-    const client = await MongoClient.connect(MONGO_CLOUD);
-    const db = client.db(MONGO_CLOUD_DB);
+    const client = await MongoClient.connect(MONGO_LOCAL);
+    const db = client.db(MONGO_LOCAL_DB);
+    // const client = await MongoClient.connect(MONGO_CLOUD);
+    // const db = client.db(MONGO_CLOUD_DB);
     await operations(db);
     client.close();
   } catch (error) {
@@ -81,7 +83,7 @@ app.get('/robots/:nickname', async (req, res) => {
       res.send(dbNickname);
     } else {
       res.status(200).type('application/json');
-      res.send("Nickname doesn't exist 😿 ");
+      res.send("Get Nickname doesn't exist 😿 ");
     }
   }, res);
 });
@@ -120,7 +122,7 @@ app.post('/robots/newrobot', async (req, res) => {
         res.status(200).type('application/json');
         res.send(robots);
       } else {
-        res.send('Nickname already exist 🤦‍♂️ ');
+        res.send('Make new robot Nickname already exist 🤦‍♂️ ');
       }
     }, res);
   } catch (error) {
@@ -148,7 +150,7 @@ app.post('/robots/:nickname/likes', async (req, res) => {
       res.status(200).type('application/json');
       res.send(updatedRobots);
     } else {
-      res.send("Nickname doesn't exist 🤷‍♂️");
+      res.send("Post like robot Nickname doesn't exist 🤷‍♂️");
     }
   }, res);
 });
@@ -211,7 +213,7 @@ app.put('/robots/:nickname/edit', async (req, res) => {
       res.status(200).type('application/json');
       res.send('Robot is updated SUCCESSFULLY! 🥰');
     } else {
-      res.send("Nickname doesn't exist 🤷‍♂️");
+      res.send("Edit robot Nickname doesn't exist 🤷‍♂️");
     }
   }, res);
 });
@@ -235,9 +237,13 @@ app.delete('/robots/:nickname/delete', async (req, res) => {
       res.status(200).type('application/json');
       res.send(updatedRobots);
     } else {
-      res.send("Nickname doesn't exist 🤷‍♂️");
+      res.send("Delete Nickname doesn't exist 🤷‍♂️");
     }
   }, res);
+});
+
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname + '/src/build/index.html'));
 });
 
 // connect to MongoDB and listen to PORT

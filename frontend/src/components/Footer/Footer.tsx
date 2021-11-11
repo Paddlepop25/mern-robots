@@ -1,6 +1,11 @@
 import React from 'react';
 import { Col, Row } from 'react-bootstrap';
-import { FaGithub, FaLinkedin, FaInstagramSquare } from 'react-icons/fa';
+import {
+  FaGithub,
+  FaLinkedin,
+  FaInstagramSquare,
+  FaTwitter,
+} from 'react-icons/fa';
 import {
   FooterStyled,
   FooterUnorderedListStyled,
@@ -35,18 +40,25 @@ const Footer = () => {
                   <FaGithub />
                 </a>
                 <a
-                  href='https://www.linkedin.com/in/lindahsu007/'
-                  target='_blank'
-                  rel='noopener noreferrer'
-                >
-                  <FaLinkedin />
-                </a>
-                <a
                   href='https://www.instagram.com/shecodeshsucodes/'
                   target='_blank'
                   rel='noopener noreferrer'
                 >
                   <FaInstagramSquare />
+                </a>
+                <a
+                  href='https://twitter.com/shecodeshsucode'
+                  target='_blank'
+                  rel='noopener noreferrer'
+                >
+                  <FaTwitter />
+                </a>
+                <a
+                  href='https://www.linkedin.com/in/lindahsu007/'
+                  target='_blank'
+                  rel='noopener noreferrer'
+                >
+                  <FaLinkedin />
                 </a>
               </FooterIconStyled>
             </FooterListStyled>

@@ -20,7 +20,7 @@ As much as possible, I added media queries to make the pages responsive to mediu
 
 ## Technologies
 
-React Icons
+React Icons - Font Awesome
 
 - https://react-icons.github.io/react-icons/
 
@@ -112,18 +112,24 @@ _(in no particular order)_
 
 - [x] move local MongoDB to Cloud
 - [x] add Spinner for when API is not loaded
-- [] build React package, serve on Express
+- [x] build React package, serve on Express
+- [x] refine the 'page not found' page
+- [x] add notes to README.md
+- [x] fix robot cards to be responsive
+- [] when running on Express, do not show JSON format
 - [] deploy Robots to Heroku
 - [] write unit tests
-- [x] add notes to README.md
-- [] fix robot cards to be responsive
 - [] add React Memo
 - [] colour dropdown in EditForm to be populated
 - [] change from nickname to robot \_id to do PUT/DELETE requests
-- [] add art from Art Institute Chicago API -> https://www.artic.edu/open-access/public-api
 - [] add a simple robot game -> word guess / match robot / etc
 - [] add slider to create/edit form for $coke 🥫
 - [] add Redux / Redux saga for actions/reducers to change state
-- [x] refine the 'page not found' page
 - [] break up create/edit form to more components
 - [] write custom hook for edit form
+- [] user login with their robot avatar
+- [] multi users play game with their robot avatar
+- [] robots have power that can increase with game plays
+- [] $1.00000000
+- [] spinner displays after 'like' robot for MongoDB Cloud
+- [] add art from Art Institute Chicago API -> https://www.artic.edu/open-access/public-api
