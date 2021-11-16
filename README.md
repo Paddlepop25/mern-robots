@@ -1,12 +1,12 @@
-# To Be Updated... 📖
+[Robots](https://robots-mern.herokuapp.com/) is deployed at Heroku. Click [here](https://robots-mern.herokuapp.com/) to see the live app.
 
-## Story time
+## Story time 📖
 
 Having started to learn and utilize React at work, I've always wanted to create a fullstack end-to-end MERN project so as to understand the whole flow better.
 
 The project I have in mind is a music guessing game, but this is a start.
 
-There were some errors especially with typescript incorporated and time was spent to recity the bugs 🐛🕷️🦟🐜. It was worth the effort as I learnt alot along the way and added some useful links in the resources sections.
+There were some errors especially with typescript incorporated and time was spent to recity the bugs 🐛🦟🕷️🐜. It was worth the effort as I learnt alot along the way and added some useful links in the resources sections.
 
 As this is an ongoing project, I have included some work-in-progress notes at the bottom as a reminder of the various tasks.
 
@@ -135,6 +135,10 @@ How to import JSON from local to MongoDB Atlas (Cloud)
 - https://docs.atlas.mongodb.com/import/mongoimport/
 - https://database.guide/import-documents-into-mongodb-from-an-array-of-json-documents/
 
+Deploymnet to Heroku
+
+- https://coursework.vschool.io/deploying-mern-app-to-heroku/
+
 ## Work In Progress & Future Enhancements
 
 _(in no particular order)_
@@ -147,13 +151,13 @@ _(in no particular order)_
 - [x] fix robot cards to be responsive
 - [x] spinner displays after 'delete' robot for MongoDB Cloud
 - [x] spinner displays after 'like' robot for MongoDB Cloud
-- [x] $1.00000000
-- [] add screenshots to README
+- [x] fix this $1.00000000 display
+- [x] add screenshots to README
+- [x] deploy Robots to Heroku
+- [] colour dropdown in EditForm to be populated
 - [] when running on Express, do not show JSON format - has temporary fix now
-- [] deploy Robots to Heroku
 - [] write unit tests
 - [] add React Memo
-- [] colour dropdown in EditForm to be populated
 - [] change from nickname to robot \_id to do PUT/DELETE requests
 - [] add a simple robot game -> word guess / match robot / etc
 - [] add slider to create/edit form for $coke 🥫
