@@ -5,7 +5,7 @@ const path = require('path');
 const MongoClient = require('mongodb').MongoClient;
 
 const app = express();
-app.use(express.static(path.join(__dirname, 'src', 'build')));
+app.use(express.static(path.join(__dirname, 'frontend', 'build')));
 
 const PORT = process.env.PORT || 8000;
 // const MONGO_LOCAL = process.env.MONGO_LOCAL;
@@ -242,7 +242,7 @@ app.delete('/robots/:nickname/delete', async (req, res) => {
 });
 
 app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname + 'src', 'build', 'index.html'));
+  res.sendFile(path.join(__dirname + 'frontend', 'build', 'index.html'));
 });
 
 // connect to MongoDB and listen to PORT
