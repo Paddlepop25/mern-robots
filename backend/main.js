@@ -5,7 +5,7 @@ const path = require('path');
 const MongoClient = require('mongodb').MongoClient;
 
 const app = express();
-app.use(express.static(path.join(__dirname, '/src/build')));
+app.use(express.static(path.join(__dirname, 'src', 'build')));
 
 const PORT = process.env.PORT || 8000;
 // const MONGO_LOCAL = process.env.MONGO_LOCAL;
@@ -89,7 +89,6 @@ app.get('/robots/:nickname', async (req, res) => {
 
 // local MongoDB - POST (insert ONE document)
 app.post('/robots/newrobot', async (req, res) => {
-  console.log('REQ BODY >>>>>> ', req.body);
   // add validation e.g nickname not more than x character
   const { nickname, email, robotNumber, coke, joke, countries, durians } =
     req.body;
@@ -243,7 +242,7 @@ app.delete('/robots/:nickname/delete', async (req, res) => {
 });
 
 app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname + '/src/build/index.html'));
+  res.sendFile(path.join(__dirname + 'src', 'build', 'index.html'));
 });
 
 // connect to MongoDB and listen to PORT

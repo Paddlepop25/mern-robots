@@ -20,7 +20,6 @@ As much as possible, I added media queries to make the pages responsive to mediu
 
 ## Images
 
-Some images
 1 Adage - proverbs and quotes
 <img src="images/1adage.png" />
 

@@ -1,3 +1,9 @@
 node_modules
 .env
 notes.txt
+
+.DS_Store
+node_modules/
+*.orig
+.idea/
+.vscode/
