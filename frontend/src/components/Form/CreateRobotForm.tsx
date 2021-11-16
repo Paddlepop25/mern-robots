@@ -254,7 +254,7 @@ const CreateRobotForm: React.FC = () => {
     <Container>
       <FormStyled>
         <Form onSubmit={onSubmitHandler}>
-          <h3>Create A Robot</h3>
+          <h3>Spawn A Robot</h3>
           <Form.Group className='mb-4'>
             <Form.Label>Give a robot nickname 🤖</Form.Label>
             <Form.Control

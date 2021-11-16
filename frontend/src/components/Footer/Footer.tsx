@@ -29,7 +29,7 @@ const Footer = () => {
         </Col>
         <Col xs={12} md={6}>
           <FooterUnorderedListStyled>
-            <FooterListStyled className='pt-3'>Contact Me:</FooterListStyled>
+            <FooterListStyled className='pt-3'>Contact Me 👩🏻‍💻</FooterListStyled>
             <FooterListStyled>
               <FooterIconStyled>
                 <a

@@ -31,4 +31,11 @@ export const LinkStyled = styled.span`
     color: #fff;
     background: #db7093;
   }
+
+  @media only screen and (max-width: 446px) {
+    a {
+      font-size: 1.2rem;
+      padding: 1.2rem 0.8rem;
+    }
+  }
 `;

@@ -13,13 +13,16 @@ const Navbar = () => {
       <UnorderedListStyled>
         <ListStyled>
           <LinkStyled>
-            <Link to='/'>Adage</Link>
+            <Link to='/'>🤖</Link>
           </LinkStyled>
           <LinkStyled>
-            <Link to='/form'>Form</Link>
+            <Link to='/adage'>Adage</Link>
           </LinkStyled>
           <LinkStyled>
             <Link to='/robots'>Robots</Link>
+          </LinkStyled>
+          <LinkStyled>
+            <Link to='/create'>Spawn</Link>
           </LinkStyled>
         </ListStyled>
       </UnorderedListStyled>

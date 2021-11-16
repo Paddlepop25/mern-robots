@@ -155,12 +155,12 @@ _(in no particular order)_
 - [x] add screenshots to README
 - [x] deploy Robots to Heroku
 - [] colour dropdown in EditForm to be populated
-- [] when running on Express, do not show JSON format - has temporary fix now
-- [] write unit tests
+- [] add slider to create/edit form for $coke 🥫
 - [] add React Memo
+- [] write unit tests
+- [] when running on Express, do not show JSON format - has temporary fix now
 - [] change from nickname to robot \_id to do PUT/DELETE requests
 - [] add a simple robot game -> word guess / match robot / etc
-- [] add slider to create/edit form for $coke 🥫
 - [] add Redux / Redux saga for actions/reducers to change state
 - [] break up create/edit form to more components
 - [] write custom hook for edit form
