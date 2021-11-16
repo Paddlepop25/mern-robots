@@ -27,6 +27,7 @@ const RobotDetails = () => {
   const [robot, setRobot] = useState<RobotType>();
   const [statusCode200, setSetStatusCode200] = useState(false);
   const [showModal, setShowModal] = React.useState(false);
+  const [showDeleteSpinner, setShowDeleteSpinner] = React.useState(false);
 
   useEffect(() => {
     const getRobot = async () => {
@@ -55,6 +56,7 @@ const RobotDetails = () => {
   };
 
   const confirmDeleteRobot = async () => {
+    setShowDeleteSpinner(true);
     const response = await fetch(`/robots/${robotNickname}/delete`, {
       method: 'DELETE',
     });
@@ -154,6 +156,7 @@ const RobotDetails = () => {
                   handleCloseModal={handleCloseModal}
                   nickname={robotNickname}
                   confirmDeleteRobot={confirmDeleteRobot}
+                  showDeleteSpinner={showDeleteSpinner}
                 />
               </Col>
             </Row>

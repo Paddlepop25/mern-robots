@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import { Button, Container, Form } from 'react-bootstrap';
 import { useHistory } from 'react-router-dom';
 import { useInput } from '../../customHooks/useInput';
+import { ThankYouModal } from '../ThankYouModal/ThankYouModal';
+import { capitalizedFirstLetterOfEveryWord } from '../Utils/Utils';
 import { ButtonsStyled, FormStyled } from './CreateRobotForm.styles';
 import { RadioInput } from './RadioInput';
 import { TVSERIES } from './TvSeries.data';
@@ -32,6 +34,7 @@ const CreateRobotForm: React.FC = () => {
   const [colorIsTouched, setColorIsTouched] = useState(false);
   const [tvSeries, setTvSeries] = useState(tvSeriesState);
   const [tvSeriesError, setTvSeriesError] = useState(false);
+  const [showModal, setShowModal] = useState(false);
 
   const colorIsValid = color !== 'Pick a Rainbow Color';
   const colorHasError = !colorIsValid && colorIsTouched;
@@ -129,7 +132,7 @@ const CreateRobotForm: React.FC = () => {
     onValueChangeHandler: cokeChangeHandler,
     onValueBlurHandler: cokeBlurHandler,
     reset: resetCokeInput,
-  } = useInput((value) => +value >= 0.1 && +value <= 30);
+  } = useInput((value) => +value >= 0.1 && +value <= 30 && value.length <= 4);
   const cokeIsOverPriced = +enteredCoke > 30;
 
   const {
@@ -177,6 +180,22 @@ const CreateRobotForm: React.FC = () => {
     setDurians(true);
   };
 
+  const handleCloseModal = () => {
+    setShowModal(false);
+  };
+
+  const handleSeeAdage = () => {
+    history.push('/');
+  };
+
+  const handleSeeUpdatedRobot = () => {
+    history.push(`/robots/${enteredNickname}`);
+  };
+
+  const handleSeeRobots = () => {
+    history.push('/robots');
+  };
+
   const onSubmitHandler = (event: React.FormEvent<HTMLFormElement>): void => {
     event.preventDefault();
 
@@ -222,12 +241,13 @@ const CreateRobotForm: React.FC = () => {
       }),
     });
 
-    resetForm();
+    setShowModal(true);
+    // resetForm();
 
-    history.push('/robots');
+    // history.push('/robots'); // page doesn't refresh
 
     // sometimes will have flash
-    window.location.reload();
+    // window.location.reload();
   };
 
   return (
@@ -367,7 +387,7 @@ const CreateRobotForm: React.FC = () => {
             {/* <Form.Range min='0.1' max='10' step='0.1' /> */}
             {cokeInputHasError && (
               <Form.Text className='text-danger'>
-                Please enter a valid number
+                Please enter a valid number round to the nearest ten cents
               </Form.Text>
             )}
             {cokeIsOverPriced && (
@@ -456,6 +476,17 @@ const CreateRobotForm: React.FC = () => {
               Reset Form 📃
             </Button>
           </ButtonsStyled>
+          <ThankYouModal
+            title={`${capitalizedFirstLetterOfEveryWord(
+              enteredNickname
+            )} has been created!`}
+            showModal={showModal}
+            handleCloseModal={handleCloseModal}
+            nickname={enteredNickname}
+            handleSeeAdage={handleSeeAdage}
+            handleSeeUpdatedRobot={handleSeeUpdatedRobot}
+            handleSeeRobots={handleSeeRobots}
+          />
         </Form>
       </FormStyled>
     </Container>

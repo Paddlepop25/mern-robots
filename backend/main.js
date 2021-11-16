@@ -8,13 +8,13 @@ const app = express();
 app.use(express.static(path.join(__dirname, '/src/build')));
 
 const PORT = process.env.PORT || 8000;
-const MONGO_LOCAL = process.env.MONGO_LOCAL;
-const MONGO_LOCAL_DB = process.env.MONGO_LOCAL_DB;
-// const MONGO_CLOUD = process.env.MONGO_CLOUD;
-// const MONGO_CLOUD_DB = process.env.MONGO_CLOUD_DB;
-// connection poolh
-const mongoClient = new MongoClient(MONGO_LOCAL, {
-  // const mongoClient = new MongoClient(MONGO_CLOUD, {
+// const MONGO_LOCAL = process.env.MONGO_LOCAL;
+// const MONGO_LOCAL_DB = process.env.MONGO_LOCAL_DB;
+const MONGO_CLOUD = process.env.MONGO_CLOUD;
+const MONGO_CLOUD_DB = process.env.MONGO_CLOUD_DB;
+// connection pool
+// const mongoClient = new MongoClient(MONGO_LOCAL, {
+const mongoClient = new MongoClient(MONGO_CLOUD, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 });
@@ -22,10 +22,10 @@ const mongoClient = new MongoClient(MONGO_LOCAL, {
 // connect to MongoDBß
 const connectToMongoDB = async (operations, res) => {
   try {
-    const client = await MongoClient.connect(MONGO_LOCAL);
-    const db = client.db(MONGO_LOCAL_DB);
-    // const client = await MongoClient.connect(MONGO_CLOUD);
-    // const db = client.db(MONGO_CLOUD_DB);
+    // const client = await MongoClient.connect(MONGO_LOCAL);
+    // const db = client.db(MONGO_LOCAL_DB);
+    const client = await MongoClient.connect(MONGO_CLOUD);
+    const db = client.db(MONGO_CLOUD_DB);
     await operations(db);
     client.close();
   } catch (error) {
@@ -82,7 +82,6 @@ app.get('/robots/:nickname', async (req, res) => {
       res.status(200).type('application/json');
       res.send(dbNickname);
     } else {
-      res.status(200).type('application/json');
       res.send("Get Nickname doesn't exist 😿 ");
     }
   }, res);
@@ -211,7 +210,8 @@ app.put('/robots/:nickname/edit', async (req, res) => {
       );
 
       res.status(200).type('application/json');
-      res.send('Robot is updated SUCCESSFULLY! 🥰');
+      // res.send('Robot is updated SUCCESSFULLY! 🥰');
+      res.send(newRobot);
     } else {
       res.send("Edit robot Nickname doesn't exist 🤷‍♂️");
     }

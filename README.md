@@ -18,6 +18,29 @@ Going for a simple light theme. Chose a pinkish theme color to contrast the loud
 
 As much as possible, I added media queries to make the pages responsive to medium and small devices.
 
+## Images
+
+Some images
+1 Adage - proverbs and quotes
+<img src="images/1adage.png" />
+
+2 Form - create a robot form with validation messages
+<img src="images/2create.png" />
+
+3 Robots - list of robots from MongoDB with 👍 like/upvote function
+<img src="images/3robots.png" />
+
+4 Details - details of a specific robot
+<img src="images/4details.png" />
+
+5 Page not found - route doesn't match
+<img src="images/5page-not-found.png" />
+
+Not listed
+
+- 6 Edit - edit the particulars of a specific robot
+- 7 Loading - spinner is displayed when waiting for response from backend / api
+
 ## Technologies
 
 React Icons - Font Awesome
@@ -65,6 +88,13 @@ Console warning for using <code>target="\_blank"</code> in Footer link
 > Using target="\_blank" without rel="noreferrer" (which implies rel="noopener") is a security risk in older browsers: see https://mathiasbynens.github.io/rel-noopener/#recommendations
 
 - https://stackoverflow.com/questions/57628890/why-people-use-rel-noopener-noreferrer-instead-of-just-rel-noreferrer
+
+Proxy error
+
+> Proxy error: Could not proxy request /robots/robocops/edit from localhost:3000 to http://localhost:8000.
+
+- TO BE FILLED WHEN SOLVED
+- Temporary fix: show ThankYouModal after user edit/create robot
 
 Get various year/month/datetime
 
@@ -116,7 +146,11 @@ _(in no particular order)_
 - [x] refine the 'page not found' page
 - [x] add notes to README.md
 - [x] fix robot cards to be responsive
-- [] when running on Express, do not show JSON format
+- [x] spinner displays after 'delete' robot for MongoDB Cloud
+- [x] spinner displays after 'like' robot for MongoDB Cloud
+- [x] $1.00000000
+- [] add screenshots to README
+- [] when running on Express, do not show JSON format - has temporary fix now
 - [] deploy Robots to Heroku
 - [] write unit tests
 - [] add React Memo
@@ -130,6 +164,4 @@ _(in no particular order)_
 - [] user login with their robot avatar
 - [] multi users play game with their robot avatar
 - [] robots have power that can increase with game plays
-- [] $1.00000000
-- [] spinner displays after 'like' robot for MongoDB Cloud
 - [] add art from Art Institute Chicago API -> https://www.artic.edu/open-access/public-api

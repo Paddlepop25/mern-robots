@@ -4,6 +4,7 @@ import { useParams, useHistory, Link } from 'react-router-dom';
 import { RobotType } from '../../Pages/Robots';
 import { SpinnerStyled } from '../../Pages/Robots.styles';
 import { NickNameType } from '../RobotDetails/RobotDetails';
+import { ThankYouModal } from '../ThankYouModal/ThankYouModal';
 import {
   capitalizedFirstLetter,
   capitalizedFirstLetterOfEveryWord,
@@ -51,6 +52,7 @@ const EditRobotForm: React.FC = () => {
   const [durians, setDurians] = useState(true);
   const [likes, setLikes] = useState(0);
   const [statusCode200, setStatusCode200] = useState(false);
+  const [showModal, setShowModal] = useState(false);
 
   useEffect(() => {
     const getRobot = async () => {
@@ -161,7 +163,7 @@ const EditRobotForm: React.FC = () => {
   const cokeChangeHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
     setCoke(event.target.value);
   };
-  const cokeIsValid = +coke > 0 && +coke <= 30;
+  const cokeIsValid = +coke > 0 && +coke <= 30 && coke.length <= 4;
   const cokeInputHasError = coke === '' || !cokeIsValid;
   const cokeIsOverPriced = +coke > 30;
 
@@ -208,6 +210,30 @@ const EditRobotForm: React.FC = () => {
     setDurians(true);
   };
 
+  const displaySpinner = (): React.ReactElement => {
+    return (
+      <SpinnerStyled>
+        <Spinner animation='border' variant='danger' />
+      </SpinnerStyled>
+    );
+  };
+
+  const handleCloseModal = () => {
+    setShowModal(false);
+  };
+
+  const handleSeeAdage = () => {
+    history.push('/');
+  };
+
+  const handleSeeUpdatedRobot = () => {
+    history.push(`/robots/${nickname}`);
+  };
+
+  const handleSeeRobots = () => {
+    history.push('/robots');
+  };
+
   const onSubmitHandler = (event: React.FormEvent<HTMLFormElement>): void => {
     event.preventDefault();
 
@@ -217,21 +243,6 @@ const EditRobotForm: React.FC = () => {
         setTvSeriesError(true);
       }
     })();
-
-    // const editedRobot = {
-    //   nickname,
-    //   email,
-    //   robotNumber: Number(robotNumber),
-    //   'favourite-color': color,
-    //   'favourite-series': tvSeriesArray,
-    //   coke,
-    //   joke,
-    //   countries: Number(countries),
-    //   durians,
-    //   likes,
-    // };
-    // console.clear();
-    // console.log(editedRobot);
 
     // send to browser
     fetch(`/robots/${robotNickname}/edit`, {
@@ -253,24 +264,31 @@ const EditRobotForm: React.FC = () => {
       }),
     });
 
-    // reset form
-    resetForm();
+    /**
+     * SCENARIOS
+     * 1 save as form is: works ok
+     * 2 save nickname only: // Unexpected token G in JSON at position 0, Get nickname doesn't exist
+     * 3 save anything else: // push to robots/:nickname but page don't refresh
+     */
 
-    history.push(`/robots/${nickname}`);
+    // ideal flow
+    /**
+     * resetForm();
+     * history.push(`/robots/${nickname}`);
+     */
+
+    // temporary solution
+    setShowModal(true);
 
     // disable for local mongoDB
     // must enable if use MongoDB on cloud if not, hang
     // sometimes will have flash
-    window.location.reload();
+    // window.location.reload();
   };
 
   return (
     <Container>
-      {!statusCode200 && (
-        <SpinnerStyled>
-          <Spinner animation='border' variant='danger' />
-        </SpinnerStyled>
-      )}
+      {!statusCode200 && displaySpinner()}
       {mongoDbRobot && (
         <FormStyled>
           <Form onSubmit={onSubmitHandler}>
@@ -400,7 +418,7 @@ const EditRobotForm: React.FC = () => {
               />
               {cokeInputHasError && (
                 <Form.Text className='text-danger'>
-                  Please enter a valid number
+                  Please enter a valid number round to the nearest ten cents
                 </Form.Text>
               )}
               {cokeIsOverPriced && (
@@ -479,6 +497,17 @@ const EditRobotForm: React.FC = () => {
                 <Link to='/robots'>Go back ⬅️</Link>
               </Button>
             </ButtonsStyled>
+            <ThankYouModal
+              title={`${capitalizedFirstLetterOfEveryWord(
+                nickname
+              )} has been saved!`}
+              showModal={showModal}
+              handleCloseModal={handleCloseModal}
+              nickname={nickname}
+              handleSeeAdage={handleSeeAdage}
+              handleSeeUpdatedRobot={handleSeeUpdatedRobot}
+              handleSeeRobots={handleSeeRobots}
+            />
           </Form>
         </FormStyled>
       )}

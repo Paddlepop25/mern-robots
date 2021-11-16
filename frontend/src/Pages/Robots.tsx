@@ -21,24 +21,35 @@ export interface RobotType {
 
 const Robots: React.FC = (): React.ReactElement => {
   const [robots, setRobots] = useState<RobotType[]>([]);
+  const [individualRobot, setIndividualRobot] = useState('');
   const [statusCode200, setStatusCode200] = useState(false);
+  const [showLikeSpinner, setShowLikeSpinner] = useState(false);
 
   useEffect(() => {
+    let mounted = true;
     const getRobots = async () => {
       const results = await fetch('/robots');
       const response = await results.json();
-      setRobots(response);
-      setStatusCode200(true);
+      if (mounted) {
+        setRobots(response);
+        setStatusCode200(true);
+      }
     };
     getRobots();
+    return () => {
+      mounted = false;
+    };
   }, []);
 
   const upVoteHandler = async (nickname: string) => {
+    setIndividualRobot(nickname);
+    setShowLikeSpinner(true);
     const result = await fetch(`/robots/${nickname}/likes`, {
       method: 'POST',
     });
     const body = await result.json();
     setRobots(body);
+    setShowLikeSpinner(false);
   };
 
   return (
@@ -66,7 +77,16 @@ const Robots: React.FC = (): React.ReactElement => {
                       className='mx-1 mb-2'
                       onClick={() => upVoteHandler(robot.nickname)}
                     >
-                      Like 👍
+                      {individualRobot === robot.nickname && showLikeSpinner ? (
+                        <Spinner
+                          animation='border'
+                          variant='light'
+                          size='sm'
+                          className='mx-4'
+                        />
+                      ) : (
+                        'Like 👍'
+                      )}
                     </Button>
                     <br />
                     <span>

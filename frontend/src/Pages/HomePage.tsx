@@ -46,7 +46,9 @@ const HomePage: React.FC = () => {
 
   useEffect(() => {
     let mounted = true;
-    getRandomAdage();
+    if (mounted) {
+      getRandomAdage();
+    }
     return () => {
       mounted = false;
     };
