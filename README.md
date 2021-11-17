@@ -1,3 +1,5 @@
+## About 🤖
+
 [Robots](https://robots-mern.herokuapp.com/) is deployed at Heroku. Click [here](https://robots-mern.herokuapp.com/) to see the live app.
 
 ## Story time 📖
@@ -135,7 +137,7 @@ How to import JSON from local to MongoDB Atlas (Cloud)
 - https://docs.atlas.mongodb.com/import/mongoimport/
 - https://database.guide/import-documents-into-mongodb-from-an-array-of-json-documents/
 
-Deploymnet to Heroku
+Deployment to Heroku
 
 - https://coursework.vschool.io/deploying-mern-app-to-heroku/
 
