@@ -3,7 +3,7 @@ import { Button, Col, Container, Row, Spinner } from 'react-bootstrap';
 import { useParams, useHistory } from 'react-router-dom';
 import { RobotType } from '../../Pages/Robots';
 import { SpinnerStyled } from '../../Pages/Robots.styles';
-import { DeleteModal } from '../DeleteModal/DeleteModal';
+import DeleteModal from '../DeleteModal/DeleteModal';
 import {
   capitalizedFirstLetter,
   capitalizedFirstLetterOfEveryWord,
